@@ -7,8 +7,9 @@ Put the seed in that you want to use for randomization, and then hit the Randomi
 This application has a simple UI to ensure that all players use the same randomized seed without worry about having the same settings.
 * Weapons in general are categorized by type. For example Greatswords are their own pool as are Halberds.
 * Exceptions are staves and seals, they are not randomized. This includes the Confessor and Prisoner starting classes, merchant shops, etc.
-* The Smithscript weapons are not randomized into base game areas
+* The Smithscript weapons are not randomized into base game areas.
 * General Sorceries are randomized with sorceries and Incantations are randomized with incantations (Dragon Communion is seperated).
+* Weapon allocations are unique amongst starting classes and merchants.
 * As a reminder, shields are treated as weapons by the game. 
 
 # Weapon Type Pooling
@@ -28,6 +29,10 @@ Dragon communion incantations are only randomized within dragon communion locati
 
 # Note on Smithing Stones and Swarm of Flies
 This mod also patches the AtkParamPC to fix a bug with SpEffectAtkPowerCorrectRate that caused swarm of flies damage to be incorrectly calculated in some circumstances. Smithing stone cost is also patched to be 3x stones per level creating more parity between Smithing and Somber weapons.
+
+# Acknowledgements
+* Big thank you to Nordgaren for being the original developer for the randomizer and helping with bug-fixing class messages post-DLC.
+* All current changes to SoulsFormats in the project are minimal, temporary fixes until a longterm update is published.
 
 # Libraries
 * [Andre](https://github.com/soulsmods/DSMapStudio/blob/master/src/Andre/Andre.Formats/Param.cs) Formerly FSParam and StudioUtils, a library for parsing FromSoft param formats. These libraries are under the MIT license.  
