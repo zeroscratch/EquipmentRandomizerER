@@ -162,10 +162,12 @@ public partial class Randomizer
         copyShopLineupParam(lot, newRemembrance);
     }
     private void addDescriptionString(CharaInitParam chr, int id)
-    {
+    {   // TODO bugfix seed: debcc47a-e11d-4cd6-94e4-5d8438435db4, should be able to use _weaponNameDictionary
+        int left = washWeaponMetadata(chr.wepleft);
+        int right = washWeaponMetadata(chr.wepRight);
         List<string> str = new() {
-            $"{_weaponNameDictionary[chr.wepleft]}{getRequiredLevelsWeapon(chr, chr.wepleft)}",
-            $"{_weaponNameDictionary[chr.wepRight]}{getRequiredLevelsWeapon(chr, chr.wepRight)}",
+            $"{Equipment.EquipmentNameList[right]}{getRequiredLevelsWeapon(chr, right)}", // shouldn't need EquipmentNameList
+            $"{Equipment.EquipmentNameList[left]}{getRequiredLevelsWeapon(chr, left)}", // shouldn't need EquipmentNameList
         };
         if (chr.subWepLeft != Const.NoItem)
         { str.Add($"{_weaponNameDictionary[chr.subWepLeft]}{getRequiredLevelsWeapon(chr, chr.subWepLeft)}"); }
