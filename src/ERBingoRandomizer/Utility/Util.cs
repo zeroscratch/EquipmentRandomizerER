@@ -114,7 +114,7 @@ static class Util
     {
         XmlDocument xml = new();
         xml.LoadXml(xmlString);
-        return PARAMDEF.XmlSerializer.Deserialize(xml);
+        return PARAMDEF.XmlSerializer.Deserialize(xml, true);   // TODO is true the right thing?
     }
     public static ulong ComputeHash(string path, BHD5.Game game)
     {

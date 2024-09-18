@@ -32,11 +32,12 @@ This mod also patches the AtkParamPC to fix a bug with SpEffectAtkPowerCorrectRa
 
 # Acknowledgements
 * Big thank you to Nordgaren for being the original developer for the randomizer and helping with bug-fixing class messages post-DLC.
-* All current changes to SoulsFormats in the project are minimal, temporary fixes until a longterm update is published.
+* All current changes to SoulsFormats in the project are SoulsFormatsNext.
 
 # Libraries
 * [Andre](https://github.com/soulsmods/DSMapStudio/blob/master/src/Andre/Andre.Formats/Param.cs) Formerly FSParam and StudioUtils, a library for parsing FromSoft param formats. These libraries are under the MIT license.  
 * [SoulsFormats](https://github.com/soulsmods/DSMapStudio/tree/master/src/Andre/SoulsFormats) from the `souldmods/DSMapStudio` repo. This is a version of [SoulsFormats](https://github.com/JKAnderson/SoulsFormats) updated for .Net 6.
+[SoulsFormatsNext](https://github.com/soulsmods/SoulsFormatsNEXT/)
 
 # License
 The code in this repository, aside from the libraries mentioned above, is under MIT license.  

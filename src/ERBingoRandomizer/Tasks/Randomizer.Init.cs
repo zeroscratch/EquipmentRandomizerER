@@ -62,7 +62,7 @@ public partial class Randomizer
         { _bhd5Reader = new BHD5Reader(_path, Config.CacheBHDs, _cancellationToken); }
 
         _cancellationToken.ThrowIfCancellationRequested();
-        _oodlePtr = Kernel32.LoadLibrary($"{_path}/oo2core_6_win64.dll");
+        _oodlePtr = Project.Utility.Kernel32.LoadLibrary($"{_path}/oo2core_6_win64.dll");
         _cancellationToken.ThrowIfCancellationRequested();
         getDefs();
         _cancellationToken.ThrowIfCancellationRequested();
@@ -72,7 +72,7 @@ public partial class Randomizer
         _cancellationToken.ThrowIfCancellationRequested();
         buildDictionaries();
         _cancellationToken.ThrowIfCancellationRequested();
-        Kernel32.FreeLibrary(_oodlePtr);
+        Project.Utility.Kernel32.FreeLibrary(_oodlePtr);
         _oodlePtr = IntPtr.Zero;
         return Task.CompletedTask;
     }

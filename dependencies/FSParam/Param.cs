@@ -511,7 +511,7 @@ public partial class Param : SoulsFile<Param>
             else
                 bw.FillUInt32($"RowOffset{i}", (uint)bw.Position);
 
-            var data = _paramData.DataForElement(Rows[i].DataIndex);
+            var data = _paramData.DataForElement(Rows[i].DataIndex); // TODO WriteBytes expexts a byte[]
             bw.WriteBytes(data);
         }
 
