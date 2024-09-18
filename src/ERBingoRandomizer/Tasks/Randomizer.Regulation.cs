@@ -194,24 +194,24 @@ public partial class Randomizer
                     ushort chance = (ushort)chances[i].GetValue(row);
                     if (chance == totalWeight)
                     { // these are all category 2  // key(weapontype), new ItemLotEntry(id, 2);
-                        addToOrderedDict(categoryDictMap, wep.wepType, new ItemLotEntry(id, category));
+                        addToOrderedDict(categoryDictMap, wep.wepType, new ItemLotEntry(sanitizedId, category));
                         break; // Break here because the entire item lot param is just a single entry.
                     }
-                    addToOrderedDict(categoryDictEnemy, wep.wepType, new ItemLotEntry(id, category));
+                    addToOrderedDict(categoryDictEnemy, wep.wepType, new ItemLotEntry(sanitizedId, category));
                 }
                 else
                 { // category == Const.ItemLotCustomWeaponCategory
-                    if (!_customWeaponDictionary.TryGetValue(id, out EquipParamWeapon? wep)) { continue; }
+                    if (!_customWeaponDictionary.TryGetValue(sanitizedId, out EquipParamWeapon? wep)) { continue; }
                     if (wep.wepType is Const.StaffType or Const.SealType) { continue; }
 
                     ushort chance = (ushort)chances[i].GetValue(row);
 
                     if (chance == totalWeight)
                     {
-                        addToOrderedDict(categoryDictMap, wep.wepType, new ItemLotEntry(id, category));
+                        addToOrderedDict(categoryDictMap, wep.wepType, new ItemLotEntry(sanitizedId, category));
                         break;
                     }
-                    addToOrderedDict(categoryDictEnemy, wep.wepType, new ItemLotEntry(id, category));
+                    addToOrderedDict(categoryDictEnemy, wep.wepType, new ItemLotEntry(sanitizedId, category));
                 }
             }
         }
