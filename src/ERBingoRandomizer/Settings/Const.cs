@@ -39,7 +39,7 @@ public static class Const
     public const byte BodyType = 1;
     public const byte ArmType = 2;
     public const byte LegType = 3;
-    public const sbyte SmithingCost = 3;
+    public const sbyte ReducedSmithingCost = 2;
     public const ushort SmithingMaterialSet = 0;
     public const ushort DaggerType = 1;
     public const ushort StraightSwordType = 3;

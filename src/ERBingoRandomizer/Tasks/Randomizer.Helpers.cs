@@ -392,8 +392,6 @@ public partial class Randomizer
         _weaponFmg[3550000] = "Greatsword of Solitude";
         _weaponFmg[18500000] = "Spirit Glaive";
         _weaponFmg[11500000] = "Flowerstone Gavel";
-        _weaponFmg[60500000] = "Dryleaf Arts";
-        _weaponFmg[60510000] = "Dane's Footwork";
         _weaponFmg[2520000] = "Star-Lined Sword";
         _weaponFmg[9500000] = "Sword of Night";
         _weaponFmg[19500000] = "Obsidian Lamina";
@@ -409,12 +407,14 @@ public partial class Randomizer
         _weaponFmg[62500000] = "Dueling Shield";
         _weaponFmg[62510000] = "Carian Thrusting Shield";
         _weaponFmg[13500000] = "Serpent Flail";
-        _weaponFmg[41510000] = "Ansbach's Bow";
+        _weaponFmg[20500000] = "Tooth Whip";
+        _weaponFmg[41510000] = "Ansbach's Longbow";
         _weaponFmg[43500000] = "Repeating Crossbow";
         _weaponFmg[43510000] = "Spread Crossbow";
         _weaponFmg[44500000] = "Rabbath's Cannon";
         _weaponFmg[42500000] = "Igon's Greatbow";
         _weaponFmg[40500000] = "Bone Bow";
+        _weaponFmg[32520000] = "Verdigris Greatshield";
         // remembrances
         _weaponFmg[53500000] = "Sword Lance";
         _weaponFmg[3510000] = "Greatsword of Damnation";
@@ -433,11 +433,13 @@ public partial class Randomizer
         {
             for (int u = 0; u < 25; u += 1)
             {
-                _weaponFmg[u + 64510000] = "Smithscript Cirque";
-                _weaponFmg[u + 10510000] = "Black Steel Twinblade";
-                _weaponFmg[u + 14520000] = "Messmer Soldier's Axe";
-                //^ less desired
-
+                // _weaponFmg[i + u + 14500000] = "Smithscript Axe";
+                // _weaponFmg[i + u + 16500000] = "Smithscript Spear";
+                // _weaponFmg[i + u + 64510000] = "Smithscript Cirque";
+                // _weaponFmg[i + u + 12500000] = "Smithscript Greathammer";
+                _weaponFmg[i + u + 60500000] = "Dryleaf Arts";
+                _weaponFmg[i + u + 60510000] = "Dane's Footwork";
+                _weaponFmg[i + u + 14520000] = "Messmer Soldier's Axe";
                 _weaponFmg[i + u + 64500000] = "Backhand Blade";
                 _weaponFmg[i + u + 8510000] = "Freyja's Greatsword";
                 _weaponFmg[i + u + 4520000] = "Fire Knight's Greatsword";
@@ -449,10 +451,12 @@ public partial class Randomizer
                 _weaponFmg[i + u + 3520000] = "Lizard Greatsword";
                 _weaponFmg[i + u + 6500000] = "Queelign's Greatsword";
                 _weaponFmg[i + u + 67500000] = "Milady";
+                _weaponFmg[i + u + 10510000] = "Black Steel Twinblade";
                 _weaponFmg[i + u + 12520000] = "Black Steel Greathammer";
                 _weaponFmg[i + u + 16520000] = "Swift Spear";
                 _weaponFmg[i + u + 16540000] = "Bloodfiend's Fork";
                 _weaponFmg[i + u + 68500000] = "Beast Claw";
+                _weaponFmg[i + u + 32500000] = "Black Steel Greatshield";
             }
         }
         //spells

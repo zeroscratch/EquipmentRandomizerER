@@ -41,7 +41,7 @@ public partial class Randomizer
         _randomizerLog = new List<string>();
         randomizeStartingClassParams();
         _cancellationToken.ThrowIfCancellationRequested();
-        randomizeItemLotParams();
+        randomizeWeaponLocations();
         _cancellationToken.ThrowIfCancellationRequested();
         randomizeShopLineupParam();
         _cancellationToken.ThrowIfCancellationRequested();
@@ -159,7 +159,7 @@ public partial class Randomizer
             addDescriptionString(startingClass, Const.ChrInfoMapping[i]);
         }
     }
-    private void randomizeItemLotParams()
+    private void randomizeWeaponLocations()
     {
         OrderedDictionary chanceDictionary = new();
         OrderedDictionary guaranteedDictionary = new();
@@ -170,55 +170,41 @@ public partial class Randomizer
 
         // _itemLotParam_map ? 64500000 backhand blade, 66500000 great katana, 68500000 beast claw, 62500000 dueling shield 
 
-        string docPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-        using (StreamWriter outputFile = new StreamWriter(Path.Combine(docPath, "ItemLotsData.txt"), true))
+        foreach (Param.Row row in rowList)
         {
-            foreach (Param.Row row in rowList)
-            {   // going through weapon lots, ignores custom weapon category
-                Param.Column[] itemIds = row.Cells.Take(Const.ItemLots).ToArray();
-                Param.Column[] categories = row.Cells.Skip(Const.CategoriesStart).Take(Const.ItemLots).ToArray();
-                Param.Column[] chances = row.Cells.Skip(Const.ChanceStart).Take(Const.ItemLots).ToArray();
-                int totalWeight = chances.Sum(a => (ushort)a.GetValue(row));
+            Param.Column[] itemIds = row.Cells.Take(Const.ItemLots).ToArray();
+            Param.Column[] categories = row.Cells.Skip(Const.CategoriesStart).Take(Const.ItemLots).ToArray();
+            Param.Column[] chances = row.Cells.Skip(Const.ChanceStart).Take(Const.ItemLots).ToArray();
+            int totalWeight = chances.Sum(a => (ushort)a.GetValue(row));
 
-                for (int i = 0; i < Const.ItemLots; i++)
+            for (int i = 0; i < Const.ItemLots; i++)
+            {
+                int category = (int)categories[i].GetValue(row);
+                if (category != Const.ItemLotWeaponCategory) { continue; }
+
+                int id = (int)itemIds[i].GetValue(row);
+                int sanitizedId = washWeaponLevels(id); // for guaranteed wash method doesn't matter, for chance some have metadata
+
+                if (!_weaponDictionary.TryGetValue(sanitizedId, out EquipParamWeapon? wep)) { continue; }
+                if ((wep.wepType is Const.StaffType or Const.SealType)) { continue; }
+
+                ushort chance = (ushort)chances[i].GetValue(row);
+                if (chance == totalWeight)
                 {
-                    int id = (int)itemIds[i].GetValue(row);
-                    outputFile.WriteLine($"row: {row.ID}, id {id},"); // delete
-
-                    int category = (int)categories[i].GetValue(row);
-                    if (category != Const.ItemLotWeaponCategory)
-                    { continue; }
-
-                    int sanitizedId = washWeaponLevels(id); // for guaranteed wash method doesn't matter, for chance some have metadata
-
-                    if (!_weaponDictionary.TryGetValue(sanitizedId, out EquipParamWeapon? wep)) { continue; }
-                    if ((wep.wepType is Const.StaffType or Const.SealType)) { continue; }
-
-                    if (id != sanitizedId) { _weaponNameDictionary[id] = $"{_weaponNameDictionary[sanitizedId]} + {id - sanitizedId}"; }
-                    //^ just in case
-
-                    ushort chance = (ushort)chances[i].GetValue(row);
-
-                    if (chance == totalWeight)
-                    {
-                        addToOrderedDict(guaranteedDictionary, wep.wepType, new ItemLotEntry(sanitizedId, category));
-                        break; // Break here because the entire item lot param is just a single entry.
-                    }
-                    addToOrderedDict(chanceDictionary, wep.wepType, new ItemLotEntry(sanitizedId, category));
+                    addToOrderedDict(guaranteedDictionary, wep.wepType, new ItemLotEntry(sanitizedId, category));
+                    break; // Break here because the entire item lot param is just a single entry.
                 }
+                addToOrderedDict(chanceDictionary, wep.wepType, new ItemLotEntry(sanitizedId, category));
             }
         }
-        // addToOrderedDict(categoryDictMap, Const.GreatKatanaType, new ItemLotEntry(66500000, 2)); // Great Katana
 
         removeDuplicateEntriesFrom(guaranteedDictionary);
         removeDuplicateEntriesFrom(chanceDictionary);
-
         groupArmaments(guaranteedDictionary);
         groupArmaments(chanceDictionary);
         Dictionary<int, ItemLotEntry> guaranteedDropReplace = getRandomizedEntries(guaranteedDictionary);
         Dictionary<int, ItemLotEntry> chanceDropReplace = getRandomizedEntries(chanceDictionary);
 
-        // Application now has weapons set to randomize
         logItem(">> Item Replacements - all instances of item on left will be replaced with item on right");
         logItem("## Guaranteed Weapons");
         logReplacementDictionary(guaranteedDropReplace);
@@ -226,46 +212,31 @@ public partial class Randomizer
         logReplacementDictionary(chanceDropReplace);
         logItem("");
 
-        foreach (Param.Row row in _itemLotParam_enemy.Rows.Concat(_itemLotParam_map.Rows))
+        foreach (Param.Row row in rowList)
         {
             Param.Column[] itemIds = row.Cells.Take(Const.ItemLots).ToArray();
             Param.Column[] categories = row.Cells.Skip(Const.CategoriesStart).Take(Const.ItemLots).ToArray();
+
             for (int i = 0; i < Const.ItemLots; i++)
             {
                 int category = (int)categories[i].GetValue(row);
-                if (category != Const.ItemLotWeaponCategory && category != Const.ItemLotCustomWeaponCategory)
-                { continue; }
+                if (category != Const.ItemLotWeaponCategory) { continue; }
 
                 int id = (int)itemIds[i].GetValue(row);
-                if (category == Const.ItemLotWeaponCategory)
+                int sanitizedId = washWeaponLevels(id);
+
+                if (!_weaponDictionary.TryGetValue(sanitizedId, out _)) { continue; }
+
+                if (guaranteedDropReplace.TryGetValue(id, out ItemLotEntry entry))
                 {
-                    if (!_weaponDictionary.TryGetValue(washWeaponLevels(id), out _)) { continue; }
-
-                    if (guaranteedDropReplace.TryGetValue(id, out ItemLotEntry entry))
-                    {
-                        itemIds[i].SetValue(row, entry.Id);
-                        categories[i].SetValue(row, entry.Category);
-                        break;
-                    }
-                    if (!chanceDropReplace.TryGetValue(id, out entry)) { continue; }
-
                     itemIds[i].SetValue(row, entry.Id);
                     categories[i].SetValue(row, entry.Category);
+                    break;
                 }
-                else
-                { // category == Const.ItemLotCustomWeaponCategory
-                    if (!_customWeaponDictionary.TryGetValue(id, out _)) { continue; }
+                if (!chanceDropReplace.TryGetValue(id, out entry)) { continue; }
 
-                    if (guaranteedDropReplace.TryGetValue(id, out ItemLotEntry entry))
-                    {
-                        itemIds[i].SetValue(row, entry.Id);
-                        categories[i].SetValue(row, entry.Category);
-                    }
-                    if (!chanceDropReplace.TryGetValue(id, out entry)) { continue; }
-
-                    itemIds[i].SetValue(row, entry.Id);
-                    categories[i].SetValue(row, entry.Category);
-                }
+                itemIds[i].SetValue(row, entry.Id);
+                categories[i].SetValue(row, entry.Category);
             }
         }
     }
@@ -499,15 +470,19 @@ public partial class Randomizer
 
     private void patchSmithingStones()
     {
+        int adjustments = 0;
         foreach (Param.Row row in _equipMtrlSetParam.Rows)
         {
-            int id = (int)row["materialId01"]!.Value.Value;
-            int category = (byte)row["materialCate01"]!.Value.Value;
             int numberRequired = (sbyte)row["itemNum01"]!.Value.Value;
+            int category = (byte)row["materialCate01"]!.Value.Value;
+            int id = (int)row["materialId01"]!.Value.Value;
+            sbyte three = 3;
 
-            if (category == 4 && numberRequired > 1 && id >= 10100 && id < 10110)
+            if (numberRequired > 1 && category == 4 && id >= 10100 && id < 10110)
             {
-                row["itemNum01"].Value.SetValue(Const.SmithingCost); // if (numberRequired == 4) { } if (numberRequired == 6) { }
+                ++adjustments;
+                if (adjustments > 9) { row["itemNum01"]!.Value.SetValue(Const.ReducedSmithingCost); }
+                else { row["itemNum01"]!.Value.SetValue(three); }
             }
         }
     }
