@@ -67,25 +67,25 @@ public partial class Randomizer
         { str.Add($"{_goodsFmg[chr.equipSpell02]}"); }
 
         logItem(string.Join(", ", str));
-        // logItem("__ Weapons");
+        logItem("__ Weapons");
 
-        // if (chr.wepleft != -1)
-        // { logItem($"Left: {_weaponNameDictionary[chr.wepleft]}{getRequiredLevelsWeapon(chr, chr.wepleft)}"); }
+        if (chr.wepleft != -1)
+        { logItem($"Left: {_weaponNameDictionary[chr.wepleft]}{getRequiredLevelsWeapon(chr, chr.wepleft)}"); }
 
-        // if (chr.wepRight != -1)
-        // { logItem($"Right: {_weaponNameDictionary[chr.wepRight]}{getRequiredLevelsWeapon(chr, chr.wepRight)}"); }
+        if (chr.wepRight != -1)
+        { logItem($"Right: {_weaponNameDictionary[chr.wepRight]}{getRequiredLevelsWeapon(chr, chr.wepRight)}"); }
 
-        // if (chr.subWepLeft != -1)
-        // { logItem($"Left 2: {_weaponNameDictionary[chr.subWepLeft]}{getRequiredLevelsWeapon(chr, chr.subWepLeft)}"); }
+        if (chr.subWepLeft != -1)
+        { logItem($"Left 2: {_weaponNameDictionary[chr.subWepLeft]}{getRequiredLevelsWeapon(chr, chr.subWepLeft)}"); }
 
-        // if (chr.subWepRight != -1)
-        // { logItem($"Right 2: {_weaponNameDictionary[chr.subWepRight]}{getRequiredLevelsWeapon(chr, chr.subWepRight)}"); }
+        if (chr.subWepRight != -1)
+        { logItem($"Right 2: {_weaponNameDictionary[chr.subWepRight]}{getRequiredLevelsWeapon(chr, chr.subWepRight)}"); }
 
-        // if (chr.subWepLeft3 != -1)
-        // { logItem($"Left 3: {_weaponNameDictionary[chr.subWepLeft3]}{getRequiredLevelsWeapon(chr, chr.subWepLeft3)}"); }
+        if (chr.subWepLeft3 != -1)
+        { logItem($"Left 3: {_weaponNameDictionary[chr.subWepLeft3]}{getRequiredLevelsWeapon(chr, chr.subWepLeft3)}"); }
 
-        // if (chr.subWepRight3 != -1)
-        // { logItem($"Right 3: {_weaponNameDictionary[chr.subWepRight3]}{getRequiredLevelsWeapon(chr, chr.subWepRight3)}"); }
+        if (chr.subWepRight3 != -1)
+        { logItem($"Right 3: {_weaponNameDictionary[chr.subWepRight3]}{getRequiredLevelsWeapon(chr, chr.subWepRight3)}"); }
 
         // logItem("\n__ Armor");
         // logItem($"Head: {_protectorFmg[chr.equipHelm]} : {chr.equipHelm}");
@@ -93,7 +93,7 @@ public partial class Randomizer
         // logItem($"Arms: {_protectorFmg[chr.equipGaunt]} : {chr.equipGaunt}");
         // logItem($"Legs: {_protectorFmg[chr.equipLeg]} : {chr.equipLeg}");
 
-        // logItem("\n__ Starting Stats");
+        logItem("\n__ Starting Stats");
         logItem($"Vigor: {chr.baseVit}");
         logItem($"Mind: {chr.baseWil}");
         logItem($"Endurance: {chr.baseEnd}");
@@ -130,7 +130,7 @@ public partial class Randomizer
         //     if (chr.equipSpell02 != -1)
         //     { logItem($"{_goodsFmg[chr.equipSpell02]}{getRequiredLevelsSpell(chr, chr.equipSpell02)}"); }
         // }
-        // logItem("");
+        logItem("");
     }
     void logShopId(int rowId)
     {

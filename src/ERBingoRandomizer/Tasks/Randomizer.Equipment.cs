@@ -9,8 +9,7 @@ namespace Project.Tasks;
 
 public partial class Randomizer
 {
-    HashSet<int> allocatedIDs = new HashSet<int>()
-    { 7040000, 7100000, 16020000, 2150000, 2510000, 14050000, 11060000, 11100000};
+    HashSet<int> allocatedIDs = new HashSet<int>() { 2510000, };
     private int randomizeStartingWeapon(int id, List<int> weapons)
     {
         int limit = weapons.Count;
@@ -123,7 +122,9 @@ public partial class Randomizer
         EquipParamWeapon? wep;
 
         if (_weaponDictionary.TryGetValue(chr.subWepLeft, out wep))
-        { if (wep.wepType == type && chrCanUseWeapon(wep, chr)) { return; } }
+        {
+            if (wep.wepType == type && chrCanUseWeapon(wep, chr)) { return; }
+        }
         else
         {
             chr.subWepLeft = getUsableWeapon(chr, type);
@@ -131,7 +132,9 @@ public partial class Randomizer
         }
 
         if (_weaponDictionary.TryGetValue(chr.subWepRight, out wep))
-        { if (wep.wepType == type && chrCanUseWeapon(wep, chr)) { return; } }
+        {
+            if (wep.wepType == type && chrCanUseWeapon(wep, chr)) { return; }
+        }
         else
         {
             chr.subWepRight = getUsableWeapon(chr, type);
@@ -139,7 +142,9 @@ public partial class Randomizer
         }
 
         if (_weaponDictionary.TryGetValue(chr.subWepLeft3, out wep))
-        { if (wep.wepType == type && chrCanUseWeapon(wep, chr)) { return; } }
+        {
+            if (wep.wepType == type && chrCanUseWeapon(wep, chr)) { return; }
+        }
         else
         {
             chr.subWepLeft3 = getUsableWeapon(chr, type);
@@ -150,7 +155,6 @@ public partial class Randomizer
     private int getUsableWeapon(CharaInitParam chr, ushort type)
     { // currently only used for starting classes (staves and seals)
         if (type == Const.StaffType) { return 33000000; } // Glintstone Staff
-
         if (type == Const.SealType) { return 34000000; } // Finger Seal
 
         IReadOnlyList<Param.Row> table = _weaponTypeDictionary[type];

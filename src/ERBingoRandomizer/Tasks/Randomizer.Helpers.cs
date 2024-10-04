@@ -98,6 +98,20 @@ public partial class Randomizer
         orderedDictionary.Remove(Const.CrossbowType);
         orderedDictionary.Remove(Const.GreatbowType);
         orderedDictionary.Remove(Const.BallistaType);
+
+        // consolidate katanas, great katanas
+        List<ItemLotEntry> katanas = (List<ItemLotEntry>?)orderedDictionary[(object)Const.KatanaType] ?? new List<ItemLotEntry>();
+        List<ItemLotEntry> greatKatanas = (List<ItemLotEntry>?)orderedDictionary[(object)Const.GreatKatanaType] ?? new List<ItemLotEntry>();
+        katanas.AddRange(greatKatanas);
+        orderedDictionary[(object)Const.KatanaType] = katanas;
+        orderedDictionary.Remove(Const.GreatKatanaType);
+
+        // consolidate greatswords, light greatswords
+        List<ItemLotEntry> greatswords = (List<ItemLotEntry>?)orderedDictionary[(object)Const.GreatswordType] ?? new List<ItemLotEntry>();
+        List<ItemLotEntry> lightGreatswords = (List<ItemLotEntry>?)orderedDictionary[(object)Const.LightGreatswordType] ?? new List<ItemLotEntry>();
+        greatswords.AddRange(lightGreatswords);
+        orderedDictionary[(object)Const.GreatswordType] = greatswords;
+        orderedDictionary.Remove(Const.LightGreatswordType);
     }
 
     private Dictionary<int, ItemLotEntry> getRandomizedEntries(IOrderedDictionary orderedDictionary)
@@ -153,12 +167,12 @@ public partial class Randomizer
         if (lot.mtrlId == -1)
         {
             int newItem = shopLineupParamDictionary[lot.equipId];
-            // logItem($"{_goodsFmg[lot.equipId]} --> {_goodsFmg[newItem]}");
+            logItem($"{_goodsFmg[lot.equipId]} --> {_goodsFmg[newItem]}");
             lot.equipId = newItem;
             return;
         }
         ShopLineupParam newRemembrance = getNewId(lot.equipId, shopLineupParamRemembranceList);
-        // logItem($"{_goodsFmg[lot.equipId]} --> {_goodsFmg[newRemembrance.equipId]}");
+        logItem($"{_goodsFmg[lot.equipId]} --> {_goodsFmg[newRemembrance.equipId]}");
         copyShopLineupParam(lot, newRemembrance);
     }
     private void addDescriptionString(CharaInitParam chr, int id)
@@ -331,8 +345,8 @@ public partial class Randomizer
     private static int washWeaponMetadata(int id) { return id / 10000 * 10000; }
     private static int washWeaponLevels(int id) { return id / 100 * 100; }
 
-    private void addDlcTypes(List<int> weaponList)
-    {   // not all needed to be injected at FMGs, these impact merchant allocations
+    private void addDlcWeapons(List<int> weaponList)
+    {   // not all needed to be injected at FMGs, these impact merchant allocations, DLC weapons of basegame types are added naturally
         weaponList.Add(64500000); // backhand blades
         weaponList.Add(64520000);
         weaponList.Add(68500000); // beast claws
@@ -358,6 +372,7 @@ public partial class Randomizer
         _weaponFmg[8520000] = "Horned Warrior's Greatsword";
         _weaponFmg[22500000] = "Claws of Night";
         _weaponFmg[68510000] = "Red Bear's Claw";
+        _weaponFmg[21530000] = "Madding Hand";
         _weaponFmg[4500000] = "Ancient Meteoric Ore Greatsword";
         _weaponFmg[4540000] = "Moonrithyll's Knight Sword";
         _weaponFmg[23500000] = "Devonia's Hammer";
@@ -371,6 +386,7 @@ public partial class Randomizer
         _weaponFmg[66510000] = "Dragon-Hunter's Great Katana";
         _weaponFmg[66520000] = "Rakshasa's Great Katana";
         _weaponFmg[15500000] = "Death Knight's Longhaft Axe";
+        _weaponFmg[15510000] = "Bonny Butchering Knife";
         _weaponFmg[16550000] = "Bloodfiend's Sacred Spear";
         _weaponFmg[17520000] = "Barbed Staff-Spear";
         _weaponFmg[3550000] = "Greatsword of Solitude";
@@ -415,23 +431,29 @@ public partial class Randomizer
         // affinities
         for (int i = 0; i < 1200; i += 100)
         {
-            _weaponFmg[i + 64500000] = "Backhand Blade";
-            _weaponFmg[i + 8510000] = "Freyja's Greatsword";
-            _weaponFmg[i + 4520000] = "Fire Knight's Greatsword";
-            _weaponFmg[i + 1510000] = "Fire Knight Shortsword";
-            _weaponFmg[i + 1500000] = "Main-gauche";
-            _weaponFmg[i + 21510000] = "Pata";
-            _weaponFmg[i + 21540000] = "Golem Fist";
-            _weaponFmg[i + 66500000] = "Great Katana";
-            _weaponFmg[i + 3520000] = "Lizard Greatsword";
-            _weaponFmg[i + 6500000] = "Queelign's Greatsword";
-            _weaponFmg[i + 67500000] = "Milady";
-            _weaponFmg[i + 12520000] = "Black Steel Greathammer";
-            _weaponFmg[i + 10510000] = "Black Steel Twinblade";
-            _weaponFmg[i + 14520000] = "Messmer Soldier's Axe";
-            _weaponFmg[i + 16520000] = "Swift Spear";
-            _weaponFmg[i + 16540000] = "Bloodfiend's Fork";
-            _weaponFmg[i + 68500000] = "Beast Claw";
+            for (int u = 0; u < 25; u += 1)
+            {
+                _weaponFmg[u + 64510000] = "Smithscript Cirque";
+                _weaponFmg[u + 10510000] = "Black Steel Twinblade";
+                _weaponFmg[u + 14520000] = "Messmer Soldier's Axe";
+                //^ less desired
+
+                _weaponFmg[i + u + 64500000] = "Backhand Blade";
+                _weaponFmg[i + u + 8510000] = "Freyja's Greatsword";
+                _weaponFmg[i + u + 4520000] = "Fire Knight's Greatsword";
+                _weaponFmg[i + u + 1510000] = "Fire Knight Shortsword";
+                _weaponFmg[i + u + 1500000] = "Main-gauche";
+                _weaponFmg[i + u + 21510000] = "Pata";
+                _weaponFmg[i + u + 21540000] = "Golem Fist";
+                _weaponFmg[i + u + 66500000] = "Great Katana";
+                _weaponFmg[i + u + 3520000] = "Lizard Greatsword";
+                _weaponFmg[i + u + 6500000] = "Queelign's Greatsword";
+                _weaponFmg[i + u + 67500000] = "Milady";
+                _weaponFmg[i + u + 12520000] = "Black Steel Greathammer";
+                _weaponFmg[i + u + 16520000] = "Swift Spear";
+                _weaponFmg[i + u + 16540000] = "Bloodfiend's Fork";
+                _weaponFmg[i + u + 68500000] = "Beast Claw";
+            }
         }
         //spells
         _goodsFmg[2004320] = "Rellana's Twin Moons";
@@ -442,7 +464,6 @@ public partial class Randomizer
         _goodsFmg[2007200] = "Rotten Butterflies";
         _goodsFmg[2007300] = "Midra's Flame of Frenzy";
         _goodsFmg[2006700] = "Light of Miquella";
-
         _goodsFmg[2006800] = "Roar of Rugalea";
         _goodsFmg[2004500] = "Glintstone Nail";
     }

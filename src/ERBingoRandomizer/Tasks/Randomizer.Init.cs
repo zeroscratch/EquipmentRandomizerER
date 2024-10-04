@@ -138,8 +138,8 @@ public partial class Randomizer
 
             EquipParamWeapon wep = new(row);
 
-            if (row.ID == Const.SerpentHunter) // is not randomized and cannot be leveled
-            {
+            if (row.ID == Const.SerpentHunter)
+            { // is not randomized and cannot be leveled
                 wep.materialSetId = 0;
                 wep.reinforceTypeId = 3000;
                 wep.reinforceShopCategory = 0;
@@ -147,11 +147,11 @@ public partial class Randomizer
             }
 
             _weaponNameDictionary[row.ID] = rowString;
-            if (!Enumerable.Range(Const.ArrowType, Const.BallistaBoltType).Contains(wep.wepType))
+
+            if (wep.wepType < 80 || wep.wepType > 89) // excluding ammunition types; arrows, bolts, etc.
             { _weaponDictionary.Add(row.ID, new EquipParamWeapon(row)); }
 
-            if (_weaponTypeDictionary.TryGetValue(wep.wepType, out List<Param.Row>? rows))
-            { rows.Add(row); }
+            if (_weaponTypeDictionary.TryGetValue(wep.wepType, out List<Param.Row>? rows)) { rows.Add(row); }
             else
             {
                 rows = new List<Param.Row> { row, };
@@ -170,6 +170,7 @@ public partial class Randomizer
             _weaponNameDictionary[row.ID] = $"{_weaponNameDictionary[customWep.baseWepId]} +{customWep.reinforceLv}";
             _customWeaponDictionary.Add(row.ID, wep);
         }
+        //^ end of weapon dictionary building
 
         _armorTypeDictionary = new Dictionary<byte, List<Param.Row>>();
         foreach (Param.Row row in _equipParamProtector.Rows)
@@ -285,7 +286,7 @@ public partial class Randomizer
                     { throw new InvalidParamDefException(_goodsParam.ParamType); }
                     break;
                 }
-            case Const.ItemLotParam_mapName:
+            case Const.ItemLotParam_mapName:    // TODO potentially needs a file extension update as well
                 {
                     _itemLotParam_map = Param.Read(file.Bytes);
                     if (!_itemLotParam_map.ApplyParamDefsCarefully(_paramDefs))
