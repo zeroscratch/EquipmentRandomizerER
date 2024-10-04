@@ -76,6 +76,7 @@ public static class Const
     public const ushort GreatArrowType = 83;
     public const ushort BoltType = 85;
     public const ushort BallistaBoltType = 86;
+    public const ushort HandToHandType = 88;
     public const ushort ThrustingShieldType = 90;
     public const ushort BackhandBladeType = 92;
     public const ushort LightGreatswordType = 93;

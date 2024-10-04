@@ -112,6 +112,27 @@ public partial class Randomizer
         greatswords.AddRange(lightGreatswords);
         orderedDictionary[(object)Const.GreatswordType] = greatswords;
         orderedDictionary.Remove(Const.LightGreatswordType);
+
+        // consolidate claws and beast claws
+        List<ItemLotEntry> claws = (List<ItemLotEntry>?)orderedDictionary[(object)Const.ClawType] ?? new List<ItemLotEntry>();
+        List<ItemLotEntry> beastClaws = (List<ItemLotEntry>?)orderedDictionary[(object)Const.BeastClawsType] ?? new List<ItemLotEntry>();
+        claws.AddRange(beastClaws);
+        orderedDictionary[(object)Const.ClawType] = claws;
+        orderedDictionary.Remove(Const.BeastClawsType);
+
+        // consolidate Hand to Hand arts and fists
+        List<ItemLotEntry> fists = (List<ItemLotEntry>?)orderedDictionary[(object)Const.FistType] ?? new List<ItemLotEntry>();
+        List<ItemLotEntry> handToHand = (List<ItemLotEntry>?)orderedDictionary[(object)Const.HandToHandType] ?? new List<ItemLotEntry>();
+        fists.AddRange(handToHand);
+        orderedDictionary[(object)Const.FistType] = fists;
+        orderedDictionary.Remove(Const.HandToHandType);
+
+        // consolidate Backhand Blades and Daggers
+        List<ItemLotEntry> daggers = (List<ItemLotEntry>?)orderedDictionary[(object)Const.DaggerType] ?? new List<ItemLotEntry>();
+        List<ItemLotEntry> backhands = (List<ItemLotEntry>?)orderedDictionary[(object)Const.BackhandBladeType] ?? new List<ItemLotEntry>();
+        daggers.AddRange(backhands);
+        orderedDictionary[(object)Const.DaggerType] = daggers;
+        orderedDictionary.Remove(Const.BackhandBladeType);
     }
 
     private Dictionary<int, ItemLotEntry> getRandomizedEntries(IOrderedDictionary orderedDictionary)
