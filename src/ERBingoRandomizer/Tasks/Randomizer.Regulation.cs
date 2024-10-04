@@ -52,7 +52,7 @@ public partial class Randomizer
         patchAtkParam();
         patchSmithingStones();
         _cancellationToken.ThrowIfCancellationRequested();
-        allocatedIDs = new HashSet<int>() { 7040000, 7100000, 16020000, 2150000, 2510000, 14050000, 11060000, 11100000 };
+        allocatedIDs = new HashSet<int>() { 2510000, };
         writeFiles();
         writeLog();
         SeedInfo = new SeedInfo(_seed, Util.GetShaRegulation256Hash());
@@ -119,6 +119,7 @@ public partial class Randomizer
         List<Param.Row> greatHammers = _weaponTypeDictionary[Const.GreatHammerType];
         List<Param.Row> halberds = _weaponTypeDictionary[Const.HalberdType];
         List<Param.Row> reapers = _weaponTypeDictionary[Const.ReaperType];
+        List<Param.Row> greatKatanas = _weaponTypeDictionary[Const.GreatKatanaType];
 
         List<int> sideArms = _weaponDictionary.Keys.Select(washWeaponMetadata).Distinct()
             .Where(id => staves.All(s => s.ID != id) && seals.All(s => s.ID != id)
@@ -134,17 +135,17 @@ public partial class Randomizer
                 && greatSpears.All(s => s.ID != id)
                 && halberds.All(s => s.ID != id)
                 && reapers.All(s => s.ID != id)
+                && greatKatanas.All(s => s.ID != id)
                 && remembranceItems.All(i => i != id))
             .ToList();
 
-        // UPDATE
         merchantWeaponList = _weaponDictionary.Keys.Select(washWeaponMetadata).Distinct()
             .Where(id => staves.All(s => s.ID != id) && seals.All(s => s.ID != id)
                 && greatbows.All(s => s.ID != id)
                 && greatShields.All(s => s.ID != id)
                 && remembranceItems.All(i => i != id))
-            .ToList();  // used later for merchants
-        addDlcTypes(merchantWeaponList);
+            .ToList();
+        addDlcWeapons(merchantWeaponList); // used later for merchants
 
         for (int i = 0; i < Config.NumberOfClasses; i++)
         {
@@ -160,80 +161,70 @@ public partial class Randomizer
     }
     private void randomizeItemLotParams()
     {
-        OrderedDictionary categoryDictEnemy = new();
-        OrderedDictionary categoryDictMap = new();
+        OrderedDictionary chanceDictionary = new();
+        OrderedDictionary guaranteedDictionary = new();
 
         IEnumerable<Param.Row> itemLotParamMap = _itemLotParam_map.Rows.Where(id => !Unk.unkItemLotParamMapWeapons.Contains(id.ID));
         IEnumerable<Param.Row> itemLotParamEnemy = _itemLotParam_enemy.Rows.Where(id => !Unk.unkItemLotParamEnemyWeapons.Contains(id.ID));
+        IEnumerable<Param.Row> rowList = itemLotParamEnemy.Concat(itemLotParamMap);
 
-        foreach (Param.Row row in itemLotParamEnemy.Concat(itemLotParamMap))
-        {   // going through enemy weapon drops
-            Param.Column[] itemIds = row.Cells.Take(Const.ItemLots).ToArray();
-            Param.Column[] categories = row.Cells.Skip(Const.CategoriesStart).Take(Const.ItemLots).ToArray();
-            Param.Column[] chances = row.Cells.Skip(Const.ChanceStart).Take(Const.ItemLots).ToArray();
-            int totalWeight = chances.Sum(a => (ushort)a.GetValue(row));
-            for (int i = 0; i < Const.ItemLots; i++)
-            {
-                int category = (int)categories[i].GetValue(row);
+        // _itemLotParam_map ? 64500000 backhand blade, 66500000 great katana, 68500000 beast claw, 62500000 dueling shield 
 
-                if (category != Const.ItemLotWeaponCategory && category != Const.ItemLotCustomWeaponCategory)
-                { continue; }
+        string docPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        using (StreamWriter outputFile = new StreamWriter(Path.Combine(docPath, "ItemLotsData.txt"), true))
+        {
+            foreach (Param.Row row in rowList)
+            {   // going through weapon lots, ignores custom weapon category
+                Param.Column[] itemIds = row.Cells.Take(Const.ItemLots).ToArray();
+                Param.Column[] categories = row.Cells.Skip(Const.CategoriesStart).Take(Const.ItemLots).ToArray();
+                Param.Column[] chances = row.Cells.Skip(Const.ChanceStart).Take(Const.ItemLots).ToArray();
+                int totalWeight = chances.Sum(a => (ushort)a.GetValue(row));
 
-                int id = (int)itemIds[i].GetValue(row);
-                int sanitizedId = washWeaponLevels(id);
-
-                if (category == Const.ItemLotWeaponCategory)
+                for (int i = 0; i < Const.ItemLots; i++)
                 {
+                    int id = (int)itemIds[i].GetValue(row);
+                    outputFile.WriteLine($"row: {row.ID}, id {id},"); // delete
+
+                    int category = (int)categories[i].GetValue(row);
+                    if (category != Const.ItemLotWeaponCategory)
+                    { continue; }
+
+                    int sanitizedId = washWeaponLevels(id); // for guaranteed wash method doesn't matter, for chance some have metadata
+
                     if (!_weaponDictionary.TryGetValue(sanitizedId, out EquipParamWeapon? wep)) { continue; }
                     if ((wep.wepType is Const.StaffType or Const.SealType)) { continue; }
 
-                    if (id != sanitizedId)
-                    {
-                        _weaponNameDictionary[id] = $"{_weaponNameDictionary[sanitizedId]} + {id - sanitizedId}";
-                    }
+                    if (id != sanitizedId) { _weaponNameDictionary[id] = $"{_weaponNameDictionary[sanitizedId]} + {id - sanitizedId}"; }
+                    //^ just in case
+
                     ushort chance = (ushort)chances[i].GetValue(row);
+
                     if (chance == totalWeight)
-                    { // these are all category 2  // key(weapontype), new ItemLotEntry(id, 2);
-                        addToOrderedDict(categoryDictMap, wep.wepType, new ItemLotEntry(sanitizedId, category));
+                    {
+                        addToOrderedDict(guaranteedDictionary, wep.wepType, new ItemLotEntry(sanitizedId, category));
                         break; // Break here because the entire item lot param is just a single entry.
                     }
-                    addToOrderedDict(categoryDictEnemy, wep.wepType, new ItemLotEntry(sanitizedId, category));
-                }
-                else
-                { // category == Const.ItemLotCustomWeaponCategory
-                    if (!_customWeaponDictionary.TryGetValue(sanitizedId, out EquipParamWeapon? wep)) { continue; }
-                    if (wep.wepType is Const.StaffType or Const.SealType) { continue; }
-
-                    ushort chance = (ushort)chances[i].GetValue(row);
-
-                    if (chance == totalWeight)
-                    {
-                        addToOrderedDict(categoryDictMap, wep.wepType, new ItemLotEntry(sanitizedId, category));
-                        break;
-                    }
-                    addToOrderedDict(categoryDictEnemy, wep.wepType, new ItemLotEntry(sanitizedId, category));
+                    addToOrderedDict(chanceDictionary, wep.wepType, new ItemLotEntry(sanitizedId, category));
                 }
             }
         }
-        //> workaround until DLC 'weapon types' are fully malleable in the codebase, want to combine katanas and great katanas. to be updated eventually for "group armaments"
-        addToOrderedDict(categoryDictMap, Const.KatanaType, new ItemLotEntry(66520000, 2)); // Rakshasa's
-        addToOrderedDict(categoryDictMap, Const.KatanaType, new ItemLotEntry(66510000, 2)); // Dragon-Hunters
-        addToOrderedDict(categoryDictMap, Const.KatanaType, new ItemLotEntry(66500000, 2)); // Great Katana
-        //^
-        removeDuplicateEntriesFrom(categoryDictMap);
-        removeDuplicateEntriesFrom(categoryDictEnemy);
-        groupArmaments(categoryDictMap);
-        groupArmaments(categoryDictEnemy);
-        Dictionary<int, ItemLotEntry> guaranteedDropReplace = getRandomizedEntries(categoryDictMap);
-        Dictionary<int, ItemLotEntry> chanceDropReplace = getRandomizedEntries(categoryDictEnemy);
+        // addToOrderedDict(categoryDictMap, Const.GreatKatanaType, new ItemLotEntry(66500000, 2)); // Great Katana
+
+        removeDuplicateEntriesFrom(guaranteedDictionary);
+        removeDuplicateEntriesFrom(chanceDictionary);
+
+        groupArmaments(guaranteedDictionary);
+        groupArmaments(chanceDictionary);
+        Dictionary<int, ItemLotEntry> guaranteedDropReplace = getRandomizedEntries(guaranteedDictionary);
+        Dictionary<int, ItemLotEntry> chanceDropReplace = getRandomizedEntries(chanceDictionary);
 
         // Application now has weapons set to randomize
-        // logItem(">> Item Replacements - all instances of item on left will be replaced with item on right");
-        // logItem("## Guaranteed Weapons");
-        // logReplacementDictionary(guaranteedDropReplace);
-        // logItem("\n## Chance Weapons");
-        // logReplacementDictionary(chanceDropReplace);
-        // logItem("");
+        logItem(">> Item Replacements - all instances of item on left will be replaced with item on right");
+        logItem("## Guaranteed Weapons");
+        logReplacementDictionary(guaranteedDropReplace);
+        logItem("\n## Chance Weapons");
+        logReplacementDictionary(chanceDropReplace);
+        logItem("");
 
         foreach (Param.Row row in _itemLotParam_enemy.Rows.Concat(_itemLotParam_map.Rows))
         {
@@ -279,7 +270,7 @@ public partial class Randomizer
         }
     }
     private void randomizeShopLineupParam()
-    {   // UPDATE
+    {
         List<int> RemembranceWeaponIDs = new List<int>()
         {
             3100000, 3140000, 4020000, 4050000, 6040000, 8100000, 9020000, 11150000, 13030000,
@@ -305,7 +296,7 @@ public partial class Randomizer
             shopLineupParamRemembranceList.Add(lot);
         }
 
-        // logItem("<> Shop Replacements - Random item selected from pool of all weapons (not including infused weapons). Remembrances are randomized amongst each-other.");
+        logItem("<> Shop Replacements - Random item selected from pool of all weapons (not including infused weapons). Remembrances are randomized amongst each-other.");
 
         foreach (Param.Row row in _shopLineupParam.Rows)
         {
@@ -381,13 +372,13 @@ public partial class Randomizer
         Dictionary<int, int> magicShopReplacement = getRandomizedIntegers(magicCategoryDictMap);
         shopLineupParamRemembranceList.Shuffle(_random);
         shopLineupParamDragonList.Shuffle(_random);
-        // logItem("\n## All Magic Replacement.");
-        // logReplacementDictionaryMagic(magicShopReplacement);
+        logItem("\n## All Magic Replacement.");
+        logReplacementDictionaryMagic(magicShopReplacement);
 
-        // logItem("\n~* Shop Magic Replacement.");
+        logItem("\n~* Shop Magic Replacement.");
         foreach (Param.Row row in _shopLineupParam.Rows)
         {
-            // logShopIdMagic(row.ID);
+            logShopIdMagic(row.ID);
             if ((byte)row["equipType"]!.Value.Value != Const.ShopLineupGoodsCategory || row.ID > 101980)
             { continue; }
 
@@ -399,7 +390,7 @@ public partial class Randomizer
             else
             {
                 ShopLineupParam newDragonIncant = getNewId(lot.equipId, shopLineupParamDragonList);
-                // logItem($"{_goodsFmg[lot.equipId]} -> {_goodsFmg[newDragonIncant.equipId]}");
+                logItem($"{_goodsFmg[lot.equipId]} -> {_goodsFmg[newDragonIncant.equipId]}");
                 copyShopLineupParam(lot, newDragonIncant);
             }
         }
@@ -438,7 +429,7 @@ public partial class Randomizer
     {
         int index = _random.Next(remembranceList.Count);
         int newId = remembranceList[index];
-        // logItem($"{_weaponNameDictionary[lot.equipId]} --> {newId}");
+        logItem($"{_weaponNameDictionary[lot.equipId]} --> {newId}");
         remembranceList.Remove(newId);
         lot.equipId = newId;
     }
