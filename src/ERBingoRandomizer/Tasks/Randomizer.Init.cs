@@ -148,7 +148,7 @@ public partial class Randomizer
 
             _weaponNameDictionary[row.ID] = rowString;
 
-            if (wep.wepType < 80 || wep.wepType > 89) // excluding ammunition types; arrows, bolts, etc.
+            if (wep.wepType < Const.ArrowType || wep.wepType > Const.BallistaBoltType) // excluding ammunition types; arrows, bolts, etc.
             { _weaponDictionary.Add(row.ID, new EquipParamWeapon(row)); }
 
             if (_weaponTypeDictionary.TryGetValue(wep.wepType, out List<Param.Row>? rows)) { rows.Add(row); }

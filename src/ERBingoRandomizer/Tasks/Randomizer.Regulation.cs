@@ -168,8 +168,7 @@ public partial class Randomizer
         IEnumerable<Param.Row> itemLotParamEnemy = _itemLotParam_enemy.Rows.Where(id => !Unk.unkItemLotParamEnemyWeapons.Contains(id.ID));
         IEnumerable<Param.Row> rowList = itemLotParamEnemy.Concat(itemLotParamMap);
 
-        // _itemLotParam_map ? 64500000 backhand blade, 66500000 great katana, 68500000 beast claw, 62500000 dueling shield 
-
+        // _itemLotParam_map ? 64500000 backhand blade, 66500000 great katana, 68500000 beast claw, 62500000 dueling shield, 60500000	Dryleaf Arts
         foreach (Param.Row row in rowList)
         {
             Param.Column[] itemIds = row.Cells.Take(Const.ItemLots).ToArray();
