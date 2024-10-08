@@ -170,6 +170,9 @@ public partial class Randomizer
             _weaponNameDictionary[row.ID] = $"{_weaponNameDictionary[customWep.baseWepId]} +{customWep.reinforceLv}";
             _customWeaponDictionary.Add(row.ID, wep);
         }
+        // workarounds TODO update to not need
+        _weaponNameDictionary[16010007] = "Spear + 7";
+        _weaponDictionary[16010007] = _weaponDictionary[16010000];
         //^ end of weapon dictionary building
 
         _armorTypeDictionary = new Dictionary<byte, List<Param.Row>>();

@@ -14,6 +14,10 @@ This application has a simple UI to ensure that all players use the same randomi
 
 # Weapon Type Pooling
 * Great Katanas are pooled with Katanas
+* Light Greatswords are pooled with Greatswords
+* Hand to Hand Arts are grouped with Fists
+* Beast Claws are grouped with Claws
+* Backhand Blades are grouped with Daggers
 * Ranged weapons are in grouped categories (bows & light bows, greatbows & ballistas are all in the same pool). 
 
 # Starting Classes
