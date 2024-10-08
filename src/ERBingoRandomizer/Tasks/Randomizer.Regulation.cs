@@ -163,12 +163,12 @@ public partial class Randomizer
     {
         OrderedDictionary chanceDictionary = new();
         OrderedDictionary guaranteedDictionary = new();
+        // OrderedDictionary guaranteedArmor = new();
 
         IEnumerable<Param.Row> itemLotParamMap = _itemLotParam_map.Rows.Where(id => !Unk.unkItemLotParamMapWeapons.Contains(id.ID));
         IEnumerable<Param.Row> itemLotParamEnemy = _itemLotParam_enemy.Rows.Where(id => !Unk.unkItemLotParamEnemyWeapons.Contains(id.ID));
         IEnumerable<Param.Row> rowList = itemLotParamEnemy.Concat(itemLotParamMap);
 
-        // _itemLotParam_map ? 64500000 backhand blade, 66500000 great katana, 68500000 beast claw, 62500000 dueling shield, 60500000	Dryleaf Arts
         foreach (Param.Row row in rowList)
         {
             Param.Column[] itemIds = row.Cells.Take(Const.ItemLots).ToArray();
@@ -179,36 +179,55 @@ public partial class Randomizer
             for (int i = 0; i < Const.ItemLots; i++)
             {
                 int category = (int)categories[i].GetValue(row);
-                if (category != Const.ItemLotWeaponCategory) { continue; }
-
                 int id = (int)itemIds[i].GetValue(row);
                 int sanitizedId = washWeaponLevels(id); // for guaranteed wash method doesn't matter, for chance some have metadata
 
-                if (!_weaponDictionary.TryGetValue(sanitizedId, out EquipParamWeapon? wep)) { continue; }
-                if ((wep.wepType is Const.StaffType or Const.SealType)) { continue; }
+                // if (category == 3)
+                // {
+                //     addToOrderedDict(guaranteedArmor, 200, new ItemLotEntry(id, category));
+                //     continue;
+                // }
 
-                ushort chance = (ushort)chances[i].GetValue(row);
-                if (chance == totalWeight)
+                if (category == Const.ItemLotWeaponCategory)
                 {
-                    addToOrderedDict(guaranteedDictionary, wep.wepType, new ItemLotEntry(sanitizedId, category));
-                    break; // Break here because the entire item lot param is just a single entry.
+                    if (!_weaponDictionary.TryGetValue(id, out EquipParamWeapon? wep)) { continue; }
+                    if ((wep.wepType is Const.StaffType or Const.SealType)) { continue; }
+
+                    ushort chance = (ushort)chances[i].GetValue(row);
+                    if (chance == totalWeight)
+                    {
+                        addToOrderedDict(guaranteedDictionary, wep.wepType, new ItemLotEntry(id, category));
+                        break; // Break here because the entire item lot param is just a single entry.
+                    }
+                    addToOrderedDict(chanceDictionary, wep.wepType, new ItemLotEntry(id, category));
                 }
-                addToOrderedDict(chanceDictionary, wep.wepType, new ItemLotEntry(sanitizedId, category));
+                if (category == Const.ItemLotCustomWeaponCategory)
+                {
+                    if (!_customWeaponDictionary.TryGetValue(id, out EquipParamWeapon? wep)) { continue; }
+                    if (wep.wepType is Const.StaffType or Const.SealType) { continue; }
+
+                    ushort chance = (ushort)chances[i].GetValue(row);
+                    if (chance == totalWeight)
+                    {
+                        addToOrderedDict(guaranteedDictionary, wep.wepType, new ItemLotEntry(id, category));
+                        break;
+                    }
+                    addToOrderedDict(chanceDictionary, wep.wepType, new ItemLotEntry(id, category));
+                }
             }
         }
-
         removeDuplicateEntriesFrom(guaranteedDictionary);
         removeDuplicateEntriesFrom(chanceDictionary);
         groupArmaments(guaranteedDictionary);
         groupArmaments(chanceDictionary);
-        Dictionary<int, ItemLotEntry> guaranteedDropReplace = getRandomizedEntries(guaranteedDictionary);
-        Dictionary<int, ItemLotEntry> chanceDropReplace = getRandomizedEntries(chanceDictionary);
+        Dictionary<int, ItemLotEntry> guaranteedReplacements = getRandomizedEntries(guaranteedDictionary);
+        Dictionary<int, ItemLotEntry> chanceReplacements = getRandomizedEntries(chanceDictionary);
 
         logItem(">> Item Replacements - all instances of item on left will be replaced with item on right");
         logItem("## Guaranteed Weapons");
-        logReplacementDictionary(guaranteedDropReplace);
+        logReplacementDictionary(guaranteedReplacements);
         logItem("\n## Chance Weapons");
-        logReplacementDictionary(chanceDropReplace);
+        logReplacementDictionary(chanceReplacements);
         logItem("");
 
         foreach (Param.Row row in rowList)
@@ -219,23 +238,46 @@ public partial class Randomizer
             for (int i = 0; i < Const.ItemLots; i++)
             {
                 int category = (int)categories[i].GetValue(row);
-                if (category != Const.ItemLotWeaponCategory) { continue; }
-
                 int id = (int)itemIds[i].GetValue(row);
-                int sanitizedId = washWeaponLevels(id);
 
-                if (!_weaponDictionary.TryGetValue(sanitizedId, out _)) { continue; }
+                // if (category == 3)
+                // {
+                //     if (armorReplacements.TryGetValue(id, out ItemLotEntry entry)) { itemIds[i].SetValue(row, entry.Id); }
+                //     continue;
+                // }
 
-                if (guaranteedDropReplace.TryGetValue(id, out ItemLotEntry entry))
+                if (category == Const.ItemLotWeaponCategory)
                 {
+                    int sanitizedId = washWeaponLevels(id);
+                    if (!_weaponDictionary.TryGetValue(id, out _)) { continue; }
+
+                    if (guaranteedReplacements.TryGetValue(id, out ItemLotEntry entry))
+                    {
+                        itemIds[i].SetValue(row, entry.Id);
+                        categories[i].SetValue(row, entry.Category);
+                        break;
+                    }
+                    if (chanceReplacements.TryGetValue(id, out entry))
+                    {
+                        itemIds[i].SetValue(row, entry.Id);
+                        categories[i].SetValue(row, entry.Category);
+                    }
+                }
+                if (category == Const.ItemLotCustomWeaponCategory)
+                {
+                    if (!_customWeaponDictionary.TryGetValue(id, out _)) { continue; }
+                    if (guaranteedReplacements.TryGetValue(id, out ItemLotEntry entry))
+                    {
+                        itemIds[i].SetValue(row, entry.Id);
+                        categories[i].SetValue(row, entry.Category);
+                    }
+                    if (!chanceReplacements.TryGetValue(id, out entry))
+                    {
+                        continue;
+                    }
                     itemIds[i].SetValue(row, entry.Id);
                     categories[i].SetValue(row, entry.Category);
-                    break;
                 }
-                if (!chanceDropReplace.TryGetValue(id, out entry)) { continue; }
-
-                itemIds[i].SetValue(row, entry.Id);
-                categories[i].SetValue(row, entry.Category);
             }
         }
     }

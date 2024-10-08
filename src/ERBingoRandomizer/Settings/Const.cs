@@ -104,6 +104,7 @@ public static class Const
     // Item Lot constants 
     public const int ItemLotGoodsCategory = 1;
     public const int ItemLotWeaponCategory = 2;
+    public const int ItemLotArmorCategory = 3;
     public const int ItemLotCustomWeaponCategory = 6;
     // Shop Lineup constants
     public const byte ShopLineupWeaponCategory = 0;
