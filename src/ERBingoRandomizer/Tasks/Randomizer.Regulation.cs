@@ -511,7 +511,7 @@ public partial class Randomizer
 
     private void patchSmithingStones()
     {
-        int adjustments = 0;
+        // int adjustments = 0;
         foreach (Param.Row row in _equipMtrlSetParam.Rows)
         {
             int numberRequired = (sbyte)row["itemNum01"]!.Value.Value;
@@ -521,9 +521,12 @@ public partial class Randomizer
 
             if (numberRequired > 1 && category == 4 && id >= 10100 && id < 10110)
             {
-                ++adjustments;
-                if (adjustments > 9) { row["itemNum01"]!.Value.SetValue(Const.ReducedSmithingCost); }
-                else { row["itemNum01"]!.Value.SetValue(three); }
+                // ++adjustments;
+                // if (adjustments > 9) { row["itemNum01"]!.Value.SetValue(Const.ReducedSmithingCost); }
+                // else
+                // {
+                row["itemNum01"]!.Value.SetValue(three);
+                // }
             }
         }
     }
