@@ -6,8 +6,8 @@ Put the seed in that you want to use for randomization, and then hit the Randomi
 # Equipment Randomizer
 This application has a simple UI to ensure that all players use the same randomized seed without worry about having the same settings.
 * Weapons in general are categorized by type. For example Greatswords are their own pool as are Halberds.
-* Exceptions are staves and seals, they are not randomized. This includes the Confessor and Prisoner starting classes, merchant shops, etc.
-* The Smithscript weapons are not randomized into base game areas.
+* Staves and seals are not randomized. This includes the Confessor and Prisoner starting classes, merchant shops, etc.
+* The Smithscript weapons, Nanaya's Torch, Lamenting Visage, Rabbath's Cannon, and the Velvet Sword of St. Trina are not randomized.
 * General Sorceries are randomized with sorceries and Incantations are randomized with incantations (Dragon Communion is seperated).
 * Weapon allocations are unique amongst starting classes and merchants.
 * As a reminder, shields are treated as weapons by the game. 
@@ -15,10 +15,12 @@ This application has a simple UI to ensure that all players use the same randomi
 # Weapon Type Pooling
 * Great Katanas are pooled with Katanas
 * Light Greatswords are pooled with Greatswords
-* Hand to Hand Arts are grouped with Fists
-* Beast Claws are grouped with Claws
-* Backhand Blades are grouped with Daggers
-* Ranged weapons are in grouped categories (bows & light bows, greatbows & ballistas are all in the same pool). 
+* Hand to Hand Arts are pooled with Fists
+* Beast Claws are pooled with Claws
+* Backhand Blades are pooled with Daggers
+* Axes and Greataxes are pooled for more weapon parity
+* Thrusting and Heavy Thrusting are pooled for more weapon parity
+* Ranged weapons are in a pooled category (bows & light bows, greatbows & ballistas are all in the same pool). 
 
 # Starting Classes
 Starting classes are randomized: weapons, armor, stats, and spells. Class levels are fixed to 9, with stats totalling 88.
@@ -26,13 +28,20 @@ The Prisoner starts with its unrandomized staff and one sorcery.
 The Confessor starts with its unrandomized seal and one incantation.
 
 # Powers of Remembrance
-Powers of Remembrance are randomized within the remembrance shop. Staves are removed from the pool of eligible weapons to allow for more bingo square engagement. This means that Rennala's Remembrance gifts a non-stave weapon.
+Powers of Remembrance are randomized within the remembrance shop. 
+Rennala's Remembrance gifts a randomized weapon, to keep an incentive to check each remembrance for weapons.
 
 # Dragon Communion
 Dragon communion incantations are only randomized within dragon communion locations.
 
-# Note on Smithing Stones and Swarm of Flies
-This mod also patches the AtkParamPC to fix a bug with SpEffectAtkPowerCorrectRate that caused swarm of flies damage to be incorrectly calculated in some circumstances. Smithing stone cost is also patched to be 3x stones per level creating more parity between Smithing and Somber weapons.
+# Swarm of Flies Bugfix
+This mod also patches the AtkParamPC to fix a bug with SpEffectAtkPowerCorrectRate that caused swarm of flies damage to be incorrectly calculated in some circumstances. 
+
+# Smithing Stone Cost
+Smithing stone cost is also patched to be 3x stones per level for stones [1, 2, 3], 2x stones per level for stones [4, 5, 6], and 1x per level for each level after.
+
+# Unlocked Maps
+All maps are unlocked at the start of the game.
 
 # Acknowledgements
 * Big thank you to Nordgaren for being the original developer for the randomizer and helping with bug-fixing class messages post-DLC.
@@ -43,5 +52,5 @@ This mod also patches the AtkParamPC to fix a bug with SpEffectAtkPowerCorrectRa
 * [SoulsFormats](https://github.com/soulsmods/DSMapStudio/tree/master/src/Andre/SoulsFormats) from the `souldmods/DSMapStudio` repo. This is a version of [SoulsFormats](https://github.com/JKAnderson/SoulsFormats) updated for .Net 6.
 [SoulsFormatsNext](https://github.com/soulsmods/SoulsFormatsNEXT/)
 
-# License
-The code in this repository, aside from the libraries mentioned above, is under MIT license.  
+# Authorized Content Creators, Leagues, etc.
+* There is currently no authorized creator, brand, or league allowed to use this software.
