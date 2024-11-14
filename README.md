@@ -51,6 +51,3 @@ All maps are unlocked at the start of the game.
 * [Andre](https://github.com/soulsmods/DSMapStudio/blob/master/src/Andre/Andre.Formats/Param.cs) Formerly FSParam and StudioUtils, a library for parsing FromSoft param formats. These libraries are under the MIT license.  
 * [SoulsFormats](https://github.com/soulsmods/DSMapStudio/tree/master/src/Andre/SoulsFormats) from the `souldmods/DSMapStudio` repo. This is a version of [SoulsFormats](https://github.com/JKAnderson/SoulsFormats) updated for .Net 6.
 [SoulsFormatsNext](https://github.com/soulsmods/SoulsFormatsNEXT/)
-
-# Authorized Content Creators, Leagues, etc.
-* There is currently no authorized creator, brand, or league allowed to use this software.
