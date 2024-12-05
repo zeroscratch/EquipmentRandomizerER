@@ -384,6 +384,54 @@ public partial class Randomizer
         // weaponList.Add();
     }
 
+    private void addShopWeapons(OrderedDictionary guaranteedDictionary)
+    {
+        addToOrderedDict(guaranteedDictionary, Const.DaggerType, new ItemLotEntry(1000000, Const.ItemLotWeaponCategory)); // dagger
+        addToOrderedDict(guaranteedDictionary, Const.DaggerType, new ItemLotEntry(1020000, Const.ItemLotWeaponCategory)); // parrying dagger
+        addToOrderedDict(guaranteedDictionary, Const.StraightSwordType, new ItemLotEntry(2010000, Const.ItemLotWeaponCategory)); // short sword
+        addToOrderedDict(guaranteedDictionary, Const.StraightSwordType, new ItemLotEntry(2000000, Const.ItemLotWeaponCategory)); // longsword
+        addToOrderedDict(guaranteedDictionary, Const.StraightSwordType, new ItemLotEntry(2020000, Const.ItemLotWeaponCategory)); // broadsword
+        addToOrderedDict(guaranteedDictionary, Const.GreatswordType, new ItemLotEntry(3000000, Const.ItemLotWeaponCategory)); // bastard sword
+        addToOrderedDict(guaranteedDictionary, Const.ColossalSwordType, new ItemLotEntry(4040000, Const.ItemLotWeaponCategory)); // zweihander
+        addToOrderedDict(guaranteedDictionary, Const.ThrustingSwordType, new ItemLotEntry(5020000, Const.ItemLotWeaponCategory)); // rapier
+        addToOrderedDict(guaranteedDictionary, Const.ThrustingSwordType, new ItemLotEntry(5000000, Const.ItemLotWeaponCategory)); // estoc
+        addToOrderedDict(guaranteedDictionary, Const.CurvedSwordType, new ItemLotEntry(7140000, Const.ItemLotWeaponCategory)); // scimitar
+        addToOrderedDict(guaranteedDictionary, Const.CurvedSwordType, new ItemLotEntry(7020000, Const.ItemLotWeaponCategory)); // shotel
+        addToOrderedDict(guaranteedDictionary, Const.AxeType, new ItemLotEntry(14020000, Const.ItemLotWeaponCategory)); // hand axe
+        addToOrderedDict(guaranteedDictionary, Const.AxeType, new ItemLotEntry(14000000, Const.ItemLotWeaponCategory)); // battle axe
+        addToOrderedDict(guaranteedDictionary, Const.AxeType, new ItemLotEntry(14050000, Const.ItemLotWeaponCategory)); // ripple blade
+        addToOrderedDict(guaranteedDictionary, Const.HammerType, new ItemLotEntry(11010000, Const.ItemLotWeaponCategory)); // club
+        addToOrderedDict(guaranteedDictionary, Const.HammerType, new ItemLotEntry(11000000, Const.ItemLotWeaponCategory)); // mace
+        addToOrderedDict(guaranteedDictionary, Const.SpearType, new ItemLotEntry(16000000, Const.ItemLotWeaponCategory)); // short spear
+        addToOrderedDict(guaranteedDictionary, Const.HalberdType, new ItemLotEntry(18000000, Const.ItemLotWeaponCategory)); // halberd
+        addToOrderedDict(guaranteedDictionary, Const.FistType, new ItemLotEntry(21000000, Const.ItemLotWeaponCategory)); // caestus
+        addToOrderedDict(guaranteedDictionary, Const.FistType, new ItemLotEntry(21010000, Const.ItemLotWeaponCategory)); // spiked caestus
+        addToOrderedDict(guaranteedDictionary, Const.LightBowType, new ItemLotEntry(40000000, Const.ItemLotWeaponCategory)); // shortbow
+        addToOrderedDict(guaranteedDictionary, Const.LightBowType, new ItemLotEntry(40050000, Const.ItemLotWeaponCategory)); // composite bow
+        addToOrderedDict(guaranteedDictionary, Const.BowType, new ItemLotEntry(41000000, Const.ItemLotWeaponCategory)); // longbow
+        addToOrderedDict(guaranteedDictionary, Const.CrossbowType, new ItemLotEntry(43020000, Const.ItemLotWeaponCategory)); // light crossbow
+        addToOrderedDict(guaranteedDictionary, Const.SmallShieldType, new ItemLotEntry(30090000, Const.ItemLotWeaponCategory)); // riveted wooden shield
+        addToOrderedDict(guaranteedDictionary, Const.SmallShieldType, new ItemLotEntry(30070000, Const.ItemLotWeaponCategory)); // red thorn round shield
+        addToOrderedDict(guaranteedDictionary, Const.SmallShieldType, new ItemLotEntry(30000000, Const.ItemLotWeaponCategory)); // buckler
+        addToOrderedDict(guaranteedDictionary, Const.SmallShieldType, new ItemLotEntry(30120000, Const.ItemLotWeaponCategory)); // iron roundshield
+        addToOrderedDict(guaranteedDictionary, Const.SmallShieldType, new ItemLotEntry(30110000, Const.ItemLotWeaponCategory)); // rift shield
+        addToOrderedDict(guaranteedDictionary, Const.MediumShieldType, new ItemLotEntry(31240000, Const.ItemLotWeaponCategory)); // horse crest wooden shield
+        addToOrderedDict(guaranteedDictionary, Const.MediumShieldType, new ItemLotEntry(31070000, Const.ItemLotWeaponCategory)); // round shield
+        addToOrderedDict(guaranteedDictionary, Const.MediumShieldType, new ItemLotEntry(31230000, Const.ItemLotWeaponCategory)); // large leather shield
+        addToOrderedDict(guaranteedDictionary, Const.MediumShieldType, new ItemLotEntry(31340000, Const.ItemLotWeaponCategory)); // black leather shield
+        addToOrderedDict(guaranteedDictionary, Const.MediumShieldType, new ItemLotEntry(31330000, Const.ItemLotWeaponCategory)); // heater shield
+        addToOrderedDict(guaranteedDictionary, Const.MediumShieldType, new ItemLotEntry(31300000, Const.ItemLotWeaponCategory)); // blue crest heater shield
+        addToOrderedDict(guaranteedDictionary, Const.MediumShieldType, new ItemLotEntry(31290000, Const.ItemLotWeaponCategory)); // red crest heater shield
+        addToOrderedDict(guaranteedDictionary, Const.MediumShieldType, new ItemLotEntry(31000000, Const.ItemLotWeaponCategory)); // kite shield
+        addToOrderedDict(guaranteedDictionary, Const.MediumShieldType, new ItemLotEntry(31100000, Const.ItemLotWeaponCategory)); // blue-gold kite shield
+        addToOrderedDict(guaranteedDictionary, Const.MediumShieldType, new ItemLotEntry(31080000, Const.ItemLotWeaponCategory)); // scorpion kite shield
+
+        // there's no torch type?
+        // addToOrderedDict(guaranteedDictionary, Const.TorchType, new ItemLotEntry(24000000, Const.ItemLotWeaponCategory)); // torch
+        // addToOrderedDict(guaranteedDictionary, Const.TorchType, new ItemLotEntry(24060000, Const.ItemLotWeaponCategory)); // beast repellent torch
+        // addToOrderedDict(guaranteedDictionary, Const.TorchType, new ItemLotEntry(24070000, Const.ItemLotWeaponCategory)); // sentry's torch
+   }
+
     private void injectAdditionalWeaponNames()
     {
         // no affinity

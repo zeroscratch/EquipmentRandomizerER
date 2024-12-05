@@ -216,6 +216,10 @@ public partial class Randomizer
                 }
             }
         }
+
+        // see: Randomizer.Helpers.cs
+        addShopWeapons(guaranteedDictionary);
+
         removeDuplicateEntriesFrom(guaranteedDictionary);
         removeDuplicateEntriesFrom(chanceDictionary);
         groupArmaments(guaranteedDictionary);
@@ -338,7 +342,7 @@ public partial class Randomizer
         foreach (Param.Row row in _shopLineupParam.Rows)
         {
             if ((byte)row["equipType"]!.Value.Value != Const.ShopLineupGoodsCategory || row.ID > 101980)
-            { continue; } // Dragon Communion Shop 101950 - 101980 
+            { continue; } // Dragon Communion Shop 101950 - 101980
 
             ShopLineupParam lot = new(new Param.Row(row));
             if (!_magicDictionary.TryGetValue(lot.equipId, out Magic? magic)) { continue; }
@@ -353,7 +357,7 @@ public partial class Randomizer
                 shopLineupParamRemembranceList.Add(lot);
             }
             else
-            { shopLineupParamDragonList.Add(lot); } // Dragon Communion Shop 101950 - 101980 
+            { shopLineupParamDragonList.Add(lot); } // Dragon Communion Shop 101950 - 101980
         }
 
         foreach (Param.Row row in _itemLotParam_enemy.Rows.Concat(_itemLotParam_map.Rows))
