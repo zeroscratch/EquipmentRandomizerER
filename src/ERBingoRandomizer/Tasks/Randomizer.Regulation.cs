@@ -12,6 +12,8 @@ using System.Security.Cryptography;
 using System.Text.Json;
 using System.Threading.Tasks;
 using static FSParam.Param;
+using static SoulsFormats.PARAM;
+using System.Diagnostics;
 
 namespace Project.Tasks;
 
@@ -53,6 +55,8 @@ public partial class Randomizer
         patchSmithingStones();
         _cancellationToken.ThrowIfCancellationRequested();
         allocatedIDs = new HashSet<int>() { 2510000, };
+        duplicate();
+        addPureBlood();
         writeFiles();
         writeLog();
         SeedInfo = new SeedInfo(_seed, Util.GetShaRegulation256Hash());
@@ -60,6 +64,51 @@ public partial class Randomizer
         File.WriteAllText(Config.LastSeedPath, seedJson);
         return Task.CompletedTask;
     }
+
+    private void duplicate()
+    {
+        IEnumerable<Param.Row> eleonara = _itemLotParam_map.Rows.Where(id => id.ID == 111600);
+        eleonara = eleonara.ToList();
+        Debug.WriteLine(eleonara.First().ID);
+
+
+        for (int i = 1; i < 10; i++)
+        {
+
+        Param.Row newEleonaraRow = new(eleonara.First());
+
+        Param.Column[] itemIds = newEleonaraRow.Cells.Take(Const.ItemLots).ToArray();
+        Param.Column[] categories = newEleonaraRow.Cells.Skip(Const.CategoriesStart).Take(Const.ItemLots).ToArray();
+
+        itemIds[0].SetValue(newEleonaraRow, 20760);
+        categories[0].SetValue(newEleonaraRow, 1);
+
+        
+            newEleonaraRow.ID = 111600 + i;
+
+            _itemLotParam_map.AddRow(newEleonaraRow);
+        }
+    }
+
+    private void addPureBlood()
+    {
+        IEnumerable<Param.Row> eleonara = _itemLotParam_map.Rows.Where(id => id.ID == 101621);
+        eleonara = eleonara.ToList();
+        Debug.WriteLine(eleonara.First().ID);
+
+        Param.Row newEleonaraRow = new(eleonara.First());
+
+        Param.Column[] itemIds = newEleonaraRow.Cells.Take(Const.ItemLots).ToArray();
+        Param.Column[] categories = newEleonaraRow.Cells.Skip(Const.CategoriesStart).Take(Const.ItemLots).ToArray();
+
+        itemIds[0].SetValue(newEleonaraRow, 2160);
+        categories[0].SetValue(newEleonaraRow, 1);
+
+        newEleonaraRow.ID = 101622;
+
+        _itemLotParam_map.AddRow(newEleonaraRow);
+    }
+
     private void randomizeStartingClassParams()
     {
         logItem("Starting Class Randomization");
