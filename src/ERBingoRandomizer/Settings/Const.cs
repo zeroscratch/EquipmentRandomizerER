@@ -26,6 +26,7 @@ public static class Const
     public const string ItemLotParam_enemyName = "ItemLotParam_enemy.param";
     public const string ShopLineupParamName = "ShopLineupParam.param";
     public const string AtkParamPcName = "AtkParam_Pc.param";
+    public const string WorldMapPieceParam = "WorldMapPieceParam.param";
     // FMGS  
     public const string WeaponNameName = "WeaponName.fmg";
     public const string ProtectorNameName = "ProtectorName.fmg";

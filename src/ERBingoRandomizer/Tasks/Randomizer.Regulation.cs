@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using static FSParam.Param;
 using static SoulsFormats.PARAM;
 using System.Diagnostics;
+using System.Drawing.Printing;
 
 namespace Project.Tasks;
 
@@ -27,6 +28,7 @@ public partial class Randomizer
     private Param _shopLineupParam;
     private Param _atkParam_Pc;
     private Param _equipMtrlSetParam;
+    private Param _worldMapPieceParam;
     // Dictionaries
     private Dictionary<int, EquipParamWeapon> _weaponDictionary;
     private List<List<int>> WeaponShopLists; // UPDATE
@@ -107,6 +109,29 @@ public partial class Randomizer
         newEleonaraRow.ID = 101622;
 
         _itemLotParam_map.AddRow(newEleonaraRow);
+    }
+
+    private void worldMap()
+    {
+        IEnumerable<Param.Row> limgraveWestMap = _worldMapPieceParam.Rows.Where(id => id.ID == 0);
+        limgraveWestMap = limgraveWestMap.ToList();
+
+        Param.Column[] itemIds = limgraveWestMap.First().Cells.Take(Const.ItemLots).ToArray();
+        //Param.Column[] categories = limgraveWestMap.Cells.Skip(Const.CategoriesStart).Take(Const.ItemLots).ToArray();
+
+        //itemIds[0].SetValue(newLimgrave, 6001);
+
+        int id = (int)itemIds[0].GetValue(limgraveWestMap.First());
+
+        Debug.WriteLine(id);
+
+        //limgraveWestMap.First().ID = 0;
+
+        //_worldMapPieceParam.AddRow(newLimgrave);
+        foreach (Param.Row row in _worldMapPieceParam.Rows)
+        {
+            Debug.WriteLine(row.ID);
+        }
     }
 
     private void randomizeStartingClassParams()
@@ -213,6 +238,8 @@ public partial class Randomizer
         OrderedDictionary chanceDictionary = new();
         OrderedDictionary guaranteedDictionary = new();
         // OrderedDictionary guaranteedArmor = new();
+
+        worldMap();
 
         IEnumerable<Param.Row> itemLotParamMap = _itemLotParam_map.Rows.Where(id => !Unk.unkItemLotParamMapWeapons.Contains(id.ID));
         IEnumerable<Param.Row> itemLotParamEnemy = _itemLotParam_enemy.Rows.Where(id => !Unk.unkItemLotParamEnemyWeapons.Contains(id.ID));

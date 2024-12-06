@@ -324,6 +324,15 @@ public partial class Randomizer
                     { throw new InvalidParamDefException(_equipMtrlSetParam.ParamType); }
                     break;
                 }
+            case Const.WorldMapPieceParam:
+                {
+                    _worldMapPieceParam = Param.Read(file.Bytes);
+                    if (!_worldMapPieceParam.ApplyParamDefsCarefully(_paramDefs))
+                    {
+                        throw new InvalidParamDefException(_worldMapPieceParam.ParamType);
+                    }
+                    break;
+                }
         }
     }
     private void getFmgs(BinderFile file)
