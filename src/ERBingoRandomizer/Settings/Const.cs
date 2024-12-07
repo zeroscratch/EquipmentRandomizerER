@@ -27,6 +27,7 @@ public static class Const
     public const string ShopLineupParamName = "ShopLineupParam.param";
     public const string AtkParamPcName = "AtkParam_Pc.param";
     public const string WorldMapPieceParam = "WorldMapPieceParam.param";
+    public const string MenuCommonParam = "MenuCommonParam.param";
     // FMGS  
     public const string WeaponNameName = "WeaponName.fmg";
     public const string ProtectorNameName = "ProtectorName.fmg";
@@ -102,6 +103,7 @@ public static class Const
     public const int ItemLots = 8;
     public const int CategoriesStart = 8;
     public const int ChanceStart = 16;
+    public const int AmountStart = 44;
     // Item Lot constants 
     public const int ItemLotGoodsCategory = 1;
     public const int ItemLotWeaponCategory = 2;

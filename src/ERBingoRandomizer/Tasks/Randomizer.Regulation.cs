@@ -15,6 +15,8 @@ using static FSParam.Param;
 using static SoulsFormats.PARAM;
 using System.Diagnostics;
 using System.Drawing.Printing;
+using System.IO.MemoryMappedFiles;
+using System.Windows.Controls.Primitives;
 
 namespace Project.Tasks;
 
@@ -28,7 +30,6 @@ public partial class Randomizer
     private Param _shopLineupParam;
     private Param _atkParam_Pc;
     private Param _equipMtrlSetParam;
-    private Param _worldMapPieceParam;
     // Dictionaries
     private Dictionary<int, EquipParamWeapon> _weaponDictionary;
     private List<List<int>> WeaponShopLists; // UPDATE
@@ -40,6 +41,7 @@ public partial class Randomizer
     private Dictionary<ushort, List<Param.Row>> _weaponTypeDictionary;
     private Dictionary<byte, List<Param.Row>> _armorTypeDictionary;
     private Dictionary<byte, List<Param.Row>> _magicTypeDictionary;
+    private Dictionary<int, WorldMapPieceParam> _worldMapPieceParamDictionary;
     public Task RandomizeRegulation()
     {
         _randomizerLog = new List<string>();
@@ -59,6 +61,7 @@ public partial class Randomizer
         allocatedIDs = new HashSet<int>() { 2510000, };
         duplicate();
         addPureBlood();
+        worldMap();
         writeFiles();
         writeLog();
         SeedInfo = new SeedInfo(_seed, Util.GetShaRegulation256Hash());
@@ -113,25 +116,34 @@ public partial class Randomizer
 
     private void worldMap()
     {
-        IEnumerable<Param.Row> limgraveWestMap = _worldMapPieceParam.Rows.Where(id => id.ID == 0);
-        limgraveWestMap = limgraveWestMap.ToList();
+        // Gives all map fragments
+        IEnumerable<Param.Row> allMaps = _worldMapPieceParam.Rows;
+        allMaps = allMaps.ToList();
 
-        Param.Column[] itemIds = limgraveWestMap.First().Cells.Take(Const.ItemLots).ToArray();
-        //Param.Column[] categories = limgraveWestMap.Cells.Skip(Const.CategoriesStart).Take(Const.ItemLots).ToArray();
-
-        //itemIds[0].SetValue(newLimgrave, 6001);
-
-        int id = (int)itemIds[0].GetValue(limgraveWestMap.First());
-
-        Debug.WriteLine(id);
-
-        //limgraveWestMap.First().ID = 0;
-
-        //_worldMapPieceParam.AddRow(newLimgrave);
-        foreach (Param.Row row in _worldMapPieceParam.Rows)
+        foreach (Param.Row row in allMaps)
         {
-            Debug.WriteLine(row.ID);
+            Param.Column[] mapFields = row.Cells.Take(4).ToArray();
+            mapFields.Last().SetValue(row, (uint)6001);
         }
+
+        List<int> mapFragmentOnMapIDs = new List<int>() { 12010000, 12010010, 12020060, 12030000, 12050000, 1034480200, 1036540500, 1037440210, 1038410200, 1040520500, 1042370200, 1042510500, 1044320000, 1045370020, 1048560700, 1049370500, 1049400500, 1049530700, 1052540700 };
+
+        IEnumerable<Param.Row> allMapFragmentsOnMapIDs = _itemLotParam_map.Rows.Where(id => mapFragmentOnMapIDs.Contains(id.ID));
+        allMapFragmentsOnMapIDs = allMapFragmentsOnMapIDs.ToList();
+
+        foreach(Param.Row row in allMapFragmentsOnMapIDs)
+        {
+            Param.Column[] chance = row.Cells.Skip(Const.ChanceStart).Take(Const.ItemLots).ToArray();
+            chance[0].SetValue(row, (ushort)0);
+        }
+
+        IEnumerable<Param.Row> undergroundMapFlag = _menuCommonParam.Rows.Where(id => id.ID == 0);
+        undergroundMapFlag = undergroundMapFlag.ToList();
+
+        Param.Column[] canShowUndergroundMap = undergroundMapFlag.First().Cells.Skip(22).Take(1).ToArray();
+        canShowUndergroundMap.First().SetValue(undergroundMapFlag.First(), (uint)6001);
+
+        Debug.WriteLine(canShowUndergroundMap.First().GetValue(undergroundMapFlag.First()));
     }
 
     private void randomizeStartingClassParams()
@@ -238,8 +250,6 @@ public partial class Randomizer
         OrderedDictionary chanceDictionary = new();
         OrderedDictionary guaranteedDictionary = new();
         // OrderedDictionary guaranteedArmor = new();
-
-        worldMap();
 
         IEnumerable<Param.Row> itemLotParamMap = _itemLotParam_map.Rows.Where(id => !Unk.unkItemLotParamMapWeapons.Contains(id.ID));
         IEnumerable<Param.Row> itemLotParamEnemy = _itemLotParam_enemy.Rows.Where(id => !Unk.unkItemLotParamEnemyWeapons.Contains(id.ID));
