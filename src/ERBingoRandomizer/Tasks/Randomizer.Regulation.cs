@@ -126,6 +126,7 @@ public partial class Randomizer
             mapFields.Last().SetValue(row, (uint)6001);
         }
 
+        // Removes the map items from the world at the map locations
         List<int> mapFragmentOnMapIDs = new List<int>() { 12010000, 12010010, 12020060, 12030000, 12050000, 1034480200, 1036540500, 1037440210, 1038410200, 1040520500, 1042370200, 1042510500, 1044320000, 1045370020, 1048560700, 1049370500, 1049400500, 1049530700, 1052540700 };
 
         IEnumerable<Param.Row> allMapFragmentsOnMapIDs = _itemLotParam_map.Rows.Where(id => mapFragmentOnMapIDs.Contains(id.ID));
@@ -137,6 +138,7 @@ public partial class Randomizer
             chance[0].SetValue(row, (ushort)0);
         }
 
+        // Gives the option to change levels of elevations 
         IEnumerable<Param.Row> undergroundMapFlag = _menuCommonParam.Rows.Where(id => id.ID == 0);
         undergroundMapFlag = undergroundMapFlag.ToList();
 
