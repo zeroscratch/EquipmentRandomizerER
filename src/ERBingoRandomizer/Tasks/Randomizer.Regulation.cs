@@ -14,6 +14,10 @@ using System.Threading.Tasks;
 using static FSParam.Param;
 using static SoulsFormats.PARAM;
 using System.Diagnostics;
+using System.Drawing.Printing;
+using System.IO.MemoryMappedFiles;
+using System.Windows.Controls.Primitives;
+using Org.BouncyCastle.Asn1.Mozilla;
 
 namespace Project.Tasks;
 
@@ -38,6 +42,7 @@ public partial class Randomizer
     private Dictionary<ushort, List<Param.Row>> _weaponTypeDictionary;
     private Dictionary<byte, List<Param.Row>> _armorTypeDictionary;
     private Dictionary<byte, List<Param.Row>> _magicTypeDictionary;
+    private Dictionary<int, WorldMapPieceParam> _worldMapPieceParamDictionary;
     public Task RandomizeRegulation()
     {
         _randomizerLog = new List<string>();
@@ -49,14 +54,16 @@ public partial class Randomizer
         _cancellationToken.ThrowIfCancellationRequested();
         randomizeShopLineupParamMagic();
         _cancellationToken.ThrowIfCancellationRequested();
+        shuffleRemembrancesWeaponsWithRemembranceWeapons();
+        _cancellationToken.ThrowIfCancellationRequested();
         randomizeShopArmorParam();
         _cancellationToken.ThrowIfCancellationRequested();
         patchAtkParam();
         patchSmithingStones();
         _cancellationToken.ThrowIfCancellationRequested();
         allocatedIDs = new HashSet<int>() { 2510000, };
-        duplicate();
-        addPureBlood();
+        addPureBloodToLeyndellReplacingRuneArc();
+        worldMap();
         writeFiles();
         writeLog();
         SeedInfo = new SeedInfo(_seed, Util.GetShaRegulation256Hash());
@@ -90,11 +97,10 @@ public partial class Randomizer
         }
     }
 
-    private void addPureBlood()
+    private void addPureBloodToLeyndellReplacingRuneArc()
     {
-        IEnumerable<Param.Row> eleonara = _itemLotParam_map.Rows.Where(id => id.ID == 101621);
+        IEnumerable<Param.Row> eleonara = _itemLotParam_map.Rows.Where(id => id.ID == 11000580);
         eleonara = eleonara.ToList();
-        Debug.WriteLine(eleonara.First().ID);
 
         Param.Row newEleonaraRow = new(eleonara.First());
 
@@ -107,6 +113,38 @@ public partial class Randomizer
         newEleonaraRow.ID = 101622;
 
         _itemLotParam_map.AddRow(newEleonaraRow);
+    }
+
+    private void worldMap()
+    {
+        // Gives all map fragments
+        IEnumerable<Param.Row> allMaps = _worldMapPieceParam.Rows;
+        allMaps = allMaps.ToList();
+
+        foreach (Param.Row row in allMaps)
+        {
+            Param.Column[] mapFields = row.Cells.Take(4).ToArray();
+            mapFields.Last().SetValue(row, (uint)6001);
+        }
+
+        // Removes the map items from the world at the map locations
+        List<int> mapFragmentOnMapIDs = new List<int>() { 12010000, 12010010, 12020060, 12030000, 12050000, 1034480200, 1036540500, 1037440210, 1038410200, 1040520500, 1042370200, 1042510500, 1044320000, 1045370020, 1048560700, 1049370500, 1049400500, 1049530700, 1052540700 };
+
+        IEnumerable<Param.Row> allMapFragmentsOnMapIDs = _itemLotParam_map.Rows.Where(id => mapFragmentOnMapIDs.Contains(id.ID));
+        allMapFragmentsOnMapIDs = allMapFragmentsOnMapIDs.ToList();
+
+        foreach(Param.Row row in allMapFragmentsOnMapIDs)
+        {
+            Param.Column[] chance = row.Cells.Skip(Const.ChanceStart).Take(Const.ItemLots).ToArray();
+            chance[0].SetValue(row, (ushort)0);
+        }
+
+        // Gives the option to change levels of elevations 
+        IEnumerable<Param.Row> undergroundMapFlag = _menuCommonParam.Rows.Where(id => id.ID == 0);
+        undergroundMapFlag = undergroundMapFlag.ToList();
+
+        Param.Column[] canShowUndergroundMap = undergroundMapFlag.First().Cells.Skip(22).Take(1).ToArray();
+        canShowUndergroundMap.First().SetValue(undergroundMapFlag.First(), (uint)6001);
     }
 
     private void randomizeStartingClassParams()
@@ -268,6 +306,7 @@ public partial class Randomizer
 
         // see: Randomizer.Helpers.cs
         addShopWeapons(guaranteedDictionary);
+        addShopWeaponsByChance(chanceDictionary);
 
         removeDuplicateEntriesFrom(guaranteedDictionary);
         removeDuplicateEntriesFrom(chanceDictionary);
@@ -382,6 +421,34 @@ public partial class Randomizer
             }
         }
     }
+
+    // Shuffles Remembrance weapons with each other and sets the incants and scorceries category to 'Weapon' type. Also removes all costs
+    private void shuffleRemembrancesWeaponsWithRemembranceWeapons()
+    {
+        List<int> targetRemembrances = new List<int>() { 101900, 101901, 101902, 101903, 101904, 101905, 101906, 101907, 101910, 101911, 101918, 101919, 101924, 101925 };
+        Param.Row[] remembrances = _shopLineupParam.Rows.Where(id => targetRemembrances.Contains(id.ID)).ToArray();
+
+        List<int> RemembranceWeaponIDs = new List<int>()
+        {
+            3100000, 3140000, 4020000, 4050000, 6040000, 8100000, 9020000, 11150000, 13030000,
+            15040000, 15110000, 17010000,  20060000, 21060000, 23050000, 42000000, 3500000, 3510000,
+            8500000, 17500000, 18510000, 23510000, 23520000, 67520000, 4530000, 4550000,
+        };
+
+        RemembranceWeaponIDs.Shuffle(_random);
+
+        foreach (Param.Row row in remembrances)
+        {
+            Param.Column equipId = row.Cells.ElementAt(0);
+            Param.Column category = row.Cells.ElementAt(7);
+            Param.Column sellPrice = row.Cells.ElementAt(1);
+            int newId = RemembranceWeaponIDs.Pop();
+            equipId.SetValue(row, newId);
+            category.SetValue(row, (byte)0);
+            sellPrice.SetValue(row, 0);
+        }
+    }
+
     private void randomizeShopLineupParamMagic()
     {
         OrderedDictionary magicCategoryDictMap = new();

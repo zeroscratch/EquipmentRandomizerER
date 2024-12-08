@@ -39,6 +39,8 @@ public partial class Randomizer
     private Param _equipParamGoods;
     private Param _equipParamProtector;
     private Param _goodsParam;
+    private Param _worldMapPieceParam;
+    private Param _menuCommonParam;
     //static async method that behaves like a constructor    
     public static async Task<Randomizer> BuildRandomizerAsync(string path, string seed, CancellationToken cancellationToken)
     {
@@ -124,6 +126,7 @@ public partial class Randomizer
         _weaponDictionary = new Dictionary<int, EquipParamWeapon>();
         _weaponTypeDictionary = new Dictionary<ushort, List<Param.Row>>();
         _weaponNameDictionary = new Dictionary<int, string>();
+        _worldMapPieceParamDictionary = new Dictionary<int, WorldMapPieceParam>();
 
         injectAdditionalWeaponNames(); // workaround for _weaponFmg
 
@@ -229,6 +232,17 @@ public partial class Randomizer
                 _magicTypeDictionary.Add(magic.ezStateBehaviorType, rows);
             }
         }
+
+        foreach (Param.Row row in _worldMapPieceParam.Rows)
+        {
+            if(!_worldMapPieceParamDictionary.TryGetValue(row.ID, out WorldMapPieceParam? map) || (row.ID < 14))
+            {
+                continue;
+            }
+
+            WorldMapPieceParam customMap = new(row);
+            _worldMapPieceParamDictionary.Add(row.ID, customMap);
+        }
     }
     private static bool isSpellGoods(EquipParamGoods good)
     {
@@ -322,6 +336,24 @@ public partial class Randomizer
                     _equipMtrlSetParam = Param.Read(file.Bytes);
                     if (!_equipMtrlSetParam.ApplyParamDefsCarefully(_paramDefs))
                     { throw new InvalidParamDefException(_equipMtrlSetParam.ParamType); }
+                    break;
+                }
+            case Const.WorldMapPieceParam:
+                {
+                    _worldMapPieceParam = Param.Read(file.Bytes);
+                    if (!_worldMapPieceParam.ApplyParamDefsCarefully(_paramDefs))
+                    {
+                        throw new InvalidParamDefException(_worldMapPieceParam.ParamType);
+                    }
+                    break;
+                }
+            case Const.MenuCommonParam:
+                {
+                    _menuCommonParam = Param.Read(file.Bytes);
+                    if (!_menuCommonParam.ApplyParamDefsCarefully(_paramDefs))
+                    {
+                        throw new InvalidParamDefException(_menuCommonParam.ParamType);
+                    }
                     break;
                 }
         }
