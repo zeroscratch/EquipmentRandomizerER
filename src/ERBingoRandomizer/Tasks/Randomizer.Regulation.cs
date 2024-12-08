@@ -17,6 +17,7 @@ using System.Diagnostics;
 using System.Drawing.Printing;
 using System.IO.MemoryMappedFiles;
 using System.Windows.Controls.Primitives;
+using Org.BouncyCastle.Asn1.Mozilla;
 
 namespace Project.Tasks;
 
@@ -52,6 +53,8 @@ public partial class Randomizer
         randomizeShopLineupParam();
         _cancellationToken.ThrowIfCancellationRequested();
         randomizeShopLineupParamMagic();
+        _cancellationToken.ThrowIfCancellationRequested();
+        shuffleRemembrancesWeaponsWithRemembranceWeapons();
         _cancellationToken.ThrowIfCancellationRequested();
         randomizeShopArmorParam();
         _cancellationToken.ThrowIfCancellationRequested();
@@ -98,7 +101,6 @@ public partial class Randomizer
     {
         IEnumerable<Param.Row> eleonara = _itemLotParam_map.Rows.Where(id => id.ID == 11000580);
         eleonara = eleonara.ToList();
-        Debug.WriteLine(eleonara.First().ID);
 
         Param.Row newEleonaraRow = new(eleonara.First());
 
@@ -143,8 +145,6 @@ public partial class Randomizer
 
         Param.Column[] canShowUndergroundMap = undergroundMapFlag.First().Cells.Skip(22).Take(1).ToArray();
         canShowUndergroundMap.First().SetValue(undergroundMapFlag.First(), (uint)6001);
-
-        Debug.WriteLine(canShowUndergroundMap.First().GetValue(undergroundMapFlag.First()));
     }
 
     private void randomizeStartingClassParams()
@@ -174,11 +174,6 @@ public partial class Randomizer
 
         IEnumerable<int> remembranceItems = _shopLineupParam.Rows.Where(r => r.ID is >= 101895 and <= 101948) // sword lance to Light of Miquella
             .Select(r => new ShopLineupParam(r).equipId);
-
-        foreach (int items in remembranceItems)
-        {
-            Debug.WriteLine(items.ToString());
-        }
 
         // washWeaponLevels  washWeaponMetadata  (washing only levels biases towards smithing weapons)
         List<int> mainArms = _weaponDictionary.Keys.Select(washWeaponLevels).Distinct()
@@ -426,6 +421,34 @@ public partial class Randomizer
             }
         }
     }
+
+    // Shuffles Remembrance weapons with each other and sets the incants and scorceries category to 'Weapon' type. Also removes all costs
+    private void shuffleRemembrancesWeaponsWithRemembranceWeapons()
+    {
+        List<int> targetRemembrances = new List<int>() { 101900, 101901, 101902, 101903, 101904, 101905, 101906, 101907, 101910, 101911, 101918, 101919, 101924, 101925 };
+        Param.Row[] remembrances = _shopLineupParam.Rows.Where(id => targetRemembrances.Contains(id.ID)).ToArray();
+
+        List<int> RemembranceWeaponIDs = new List<int>()
+        {
+            3100000, 3140000, 4020000, 4050000, 6040000, 8100000, 9020000, 11150000, 13030000,
+            15040000, 15110000, 17010000,  20060000, 21060000, 23050000, 42000000, 3500000, 3510000,
+            8500000, 17500000, 18510000, 23510000, 23520000, 67520000, 4530000, 4550000,
+        };
+
+        RemembranceWeaponIDs.Shuffle(_random);
+
+        foreach (Param.Row row in remembrances)
+        {
+            Param.Column equipId = row.Cells.ElementAt(0);
+            Param.Column category = row.Cells.ElementAt(7);
+            Param.Column sellPrice = row.Cells.ElementAt(1);
+            int newId = RemembranceWeaponIDs.Pop();
+            equipId.SetValue(row, newId);
+            category.SetValue(row, (byte)0);
+            sellPrice.SetValue(row, 0);
+        }
+    }
+
     private void randomizeShopLineupParamMagic()
     {
         OrderedDictionary magicCategoryDictMap = new();
