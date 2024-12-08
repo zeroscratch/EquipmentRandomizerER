@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using Org.BouncyCastle.OpenSsl;
 
 namespace Project.Tasks;
 
@@ -87,6 +88,7 @@ public partial class Randomizer
         List<ItemLotEntry> crossbows = (List<ItemLotEntry>?)orderedDictionary[(object)Const.CrossbowType] ?? new List<ItemLotEntry>();
         List<ItemLotEntry> greatbows = (List<ItemLotEntry>?)orderedDictionary[(object)Const.GreatbowType] ?? new List<ItemLotEntry>();
         List<ItemLotEntry> ballista = (List<ItemLotEntry>?)orderedDictionary[(object)Const.BallistaType] ?? new List<ItemLotEntry>();
+        List<ItemLotEntry> swords = (List<ItemLotEntry>?)orderedDictionary[(object)Const.StraightSwordType] ?? new List<ItemLotEntry>();
 
         bows.AddRange(lightbows);
         bows.AddRange(crossbows);
@@ -128,11 +130,11 @@ public partial class Randomizer
         orderedDictionary.Remove(Const.HandToHandType);
 
         // consolidate Backhand Blades and Daggers
-        List<ItemLotEntry> daggers = (List<ItemLotEntry>?)orderedDictionary[(object)Const.DaggerType] ?? new List<ItemLotEntry>();
-        List<ItemLotEntry> backhands = (List<ItemLotEntry>?)orderedDictionary[(object)Const.BackhandBladeType] ?? new List<ItemLotEntry>();
-        daggers.AddRange(backhands);
-        orderedDictionary[(object)Const.DaggerType] = daggers;
-        orderedDictionary.Remove(Const.BackhandBladeType);
+        //List<ItemLotEntry> daggers = (List<ItemLotEntry>?)orderedDictionary[(object)Const.DaggerType] ?? new List<ItemLotEntry>();
+        //List<ItemLotEntry> backhands = (List<ItemLotEntry>?)orderedDictionary[(object)Const.BackhandBladeType] ?? new List<ItemLotEntry>();
+        //daggers.AddRange(backhands);
+        //orderedDictionary[(object)Const.DaggerType] = daggers;
+        //orderedDictionary.Remove(Const.BackhandBladeType);
     }
 
     private Dictionary<int, ItemLotEntry> getRandomizedEntries(IOrderedDictionary orderedDictionary)
@@ -427,12 +429,19 @@ public partial class Randomizer
         addToOrderedDict(guaranteedDictionary, Const.MediumShieldType, new ItemLotEntry(31000000, Const.ItemLotWeaponCategory)); // kite shield
         addToOrderedDict(guaranteedDictionary, Const.MediumShieldType, new ItemLotEntry(31100000, Const.ItemLotWeaponCategory)); // blue-gold kite shield
         addToOrderedDict(guaranteedDictionary, Const.MediumShieldType, new ItemLotEntry(31080000, Const.ItemLotWeaponCategory)); // scorpion kite shield
+        addToOrderedDict(guaranteedDictionary, Const.CurvedSwordType, new ItemLotEntry(64500000, Const.ItemLotWeaponCategory)); // Backhand Blades
+        addToOrderedDict(guaranteedDictionary, Const.CurvedSwordType, new ItemLotEntry(64520000, Const.ItemLotWeaponCategory)); // Curseblade Cirque
 
         // there's no torch type?
         // addToOrderedDict(guaranteedDictionary, Const.TorchType, new ItemLotEntry(24000000, Const.ItemLotWeaponCategory)); // torch
         // addToOrderedDict(guaranteedDictionary, Const.TorchType, new ItemLotEntry(24060000, Const.ItemLotWeaponCategory)); // beast repellent torch
         // addToOrderedDict(guaranteedDictionary, Const.TorchType, new ItemLotEntry(24070000, Const.ItemLotWeaponCategory)); // sentry's torch
-   }
+    }
+
+    private void addShopWeaponsByChance(OrderedDictionary chanceDictionary)
+    {
+        addToOrderedDict(chanceDictionary, Const.CurvedSwordType, new ItemLotEntry(64510000, Const.ItemLotWeaponCategory)); //Smithscript Cirque
+    }
 
     private void injectAdditionalWeaponNames()
     {
@@ -440,6 +449,8 @@ public partial class Randomizer
         _weaponFmg[14510000] = "Death Knight's Twin Axes";
         _weaponFmg[14540000] = "Forked-Tongue Hatchet";
         _weaponFmg[64520000] = "Curseblade's Cirque";
+        //_weaponFmg[64510000] = "Smithscript Cirque";
+        _weaponFmg[64500000] = "Backhand Blade";
         _weaponFmg[8520000] = "Horned Warrior's Greatsword";
         _weaponFmg[22500000] = "Claws of Night";
         _weaponFmg[68510000] = "Red Bear's Claw";
@@ -506,7 +517,7 @@ public partial class Randomizer
             {
                 // _weaponFmg[i + u + 14500000] = "Smithscript Axe";
                 // _weaponFmg[i + u + 16500000] = "Smithscript Spear";
-                // _weaponFmg[i + u + 64510000] = "Smithscript Cirque";
+                 _weaponFmg[i + u + 64510000] = "Smithscript Cirque";
                 // _weaponFmg[i + u + 12500000] = "Smithscript Greathammer";
                 _weaponFmg[i + u + 60500000] = "Dryleaf Arts";
                 _weaponFmg[i + u + 60510000] = "Dane's Footwork";

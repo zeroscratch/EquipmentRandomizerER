@@ -59,8 +59,7 @@ public partial class Randomizer
         patchSmithingStones();
         _cancellationToken.ThrowIfCancellationRequested();
         allocatedIDs = new HashSet<int>() { 2510000, };
-        duplicate();
-        addPureBlood();
+        addPureBloodToLeyndellReplacingRuneArc();
         worldMap();
         writeFiles();
         writeLog();
@@ -95,9 +94,9 @@ public partial class Randomizer
         }
     }
 
-    private void addPureBlood()
+    private void addPureBloodToLeyndellReplacingRuneArc()
     {
-        IEnumerable<Param.Row> eleonara = _itemLotParam_map.Rows.Where(id => id.ID == 101621);
+        IEnumerable<Param.Row> eleonara = _itemLotParam_map.Rows.Where(id => id.ID == 11000580);
         eleonara = eleonara.ToList();
         Debug.WriteLine(eleonara.First().ID);
 
@@ -175,6 +174,11 @@ public partial class Randomizer
 
         IEnumerable<int> remembranceItems = _shopLineupParam.Rows.Where(r => r.ID is >= 101895 and <= 101948) // sword lance to Light of Miquella
             .Select(r => new ShopLineupParam(r).equipId);
+
+        foreach (int items in remembranceItems)
+        {
+            Debug.WriteLine(items.ToString());
+        }
 
         // washWeaponLevels  washWeaponMetadata  (washing only levels biases towards smithing weapons)
         List<int> mainArms = _weaponDictionary.Keys.Select(washWeaponLevels).Distinct()
@@ -307,6 +311,7 @@ public partial class Randomizer
 
         // see: Randomizer.Helpers.cs
         addShopWeapons(guaranteedDictionary);
+        addShopWeaponsByChance(chanceDictionary);
 
         removeDuplicateEntriesFrom(guaranteedDictionary);
         removeDuplicateEntriesFrom(chanceDictionary);
