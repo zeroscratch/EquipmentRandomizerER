@@ -5,4 +5,4 @@ rm -rf ./publish/ME2/bingo
 
 ./run_publish.sh
 
-zip -r EquipmentRandomizer.zip ./publish
+zip -r ./publish/EquipmentRandomizer.zip ./publish/EquipmentRandomizer

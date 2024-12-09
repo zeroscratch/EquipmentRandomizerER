@@ -2,7 +2,7 @@
 
 # The build system for windows projects will be different because the project is built using an IDE.
 # We just script the copying for building on Ubuntu
-PUBLISH_DIR=./EquipmentRandomizer
+PUBLISH_DIR=./publish/EquipmentRandomizer
 
 # Relocate the README temporarily so the publish command can work
 echo "Copying README.md to temp location"
