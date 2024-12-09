@@ -3,6 +3,10 @@
 # If true then the debug console will appear as .exe is running
 debug = false
 
+external_dlls = [
+    "SkipTheIntro/SkipTheIntro.dll"
+]
+
 # Mod loader configuration
 [extension.mod_loader]
 enabled = true
@@ -29,7 +33,8 @@ loose_params = false
 # Note modengine 2 cannot resolve conflicting files including regulation.bin, the mod with the highest priority will be the file loaded. 
 
 mods = [
-    { enabled = true, name = "default", path = "bingo" }
+    { enabled = true, name = "default", path = "bingo" },
+    { enabled = true, name = "SkipTheIntro", path = "SkipTheIntro/SkipTheIntro" }
 ]
 
 # When enabled, scylly hide will be injected into the game. This allows for antidebug measures in the game to be bypassed so that you can attach
