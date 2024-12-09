@@ -100,20 +100,13 @@ public partial class Randomizer
 
     private void addPureBloodToLeyndellReplacingRuneArc()
     {
-        IEnumerable<Param.Row> eleonara = _itemLotParam_map.Rows.Where(id => id.ID == 11000580);
-        eleonara = eleonara.ToList();
+        Param.Row runeArcItemLot = _itemLotParam_map.Rows.Where(id => id.ID == 11000580).ToArray()[0];
 
-        Param.Row newEleonaraRow = new(eleonara.First());
+        Param.Column itemId = runeArcItemLot.Cells.ElementAt(0);
+        Param.Column category = runeArcItemLot.Cells.ElementAt(Const.CategoriesStart);
 
-        Param.Column[] itemIds = newEleonaraRow.Cells.Take(Const.ItemLots).ToArray();
-        Param.Column[] categories = newEleonaraRow.Cells.Skip(Const.CategoriesStart).Take(Const.ItemLots).ToArray();
-
-        itemIds[0].SetValue(newEleonaraRow, 2160);
-        categories[0].SetValue(newEleonaraRow, 1);
-
-        newEleonaraRow.ID = 101622;
-
-        _itemLotParam_map.AddRow(newEleonaraRow);
+        itemId.SetValue(runeArcItemLot, 2160);
+        category.SetValue(runeArcItemLot, 1);
     }
 
     private void worldMap()
