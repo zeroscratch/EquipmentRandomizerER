@@ -10,7 +10,8 @@ cp ../../README.md ..
 
 # Run the build command
 echo "Building executable"
-dotnet publish -c Release /p:DebugType=none -r win-x64 --self-contained true --output $PUBLISH_DIR
+dotnet publish -c Release /p:DebugType=none -r win-x64 --self-contained true --output $PUBLISH_DIR && \
+echo "Build finished"
 
 # Cleanup temp file
 echo "Cleaning up README.md from temp location"

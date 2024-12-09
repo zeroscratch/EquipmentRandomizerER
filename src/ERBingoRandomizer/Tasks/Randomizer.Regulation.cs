@@ -543,15 +543,11 @@ public partial class Randomizer
         // There are 9 pickup locations, choose 5 to be Perfume Bottle Weapon checks
         List<int> validLocationIDs = new List<int>()
         {
-            // 11000130, // Leyndell chest
-            // 11000470, // Leyndell path to grand lift
-            16000110, // Volcano manor
-            31180000, // Perfumer's Grotto
-            1036510020, // Perfumer's Ruins (near Omenkiller)
-            // 1036520070, // Perfumer's Ruins (on ledge)
-            // 1039510000, // Altus by omen
-            1039540040, // Shaded Castle
-            1048380010 // Caelid
+           16000110, // Volcano manor
+           31180000, // Perfumer's Grotto
+           1036510020, // Perfumer's Ruins (near Omenkiller)
+           1039540040, // Shaded Castle
+           1048380010 // Caelid
         };
         List<int> perfumeBottleIDs = new List<int>()
         {
@@ -565,7 +561,7 @@ public partial class Randomizer
 
         IReadOnlyList<Param.Row> perfumeBottleLocations = _itemLotParam_map.Rows.Where(id => validLocationIDs.Contains(id.ID)).ToList();
 
-        logItem("## Perfume Bottles");
+        // logItem("## Perfume Bottles");
         foreach (Param.Row row in perfumeBottleLocations)
         {
             Param.Column itemId = row.Cells.ElementAt(0);
@@ -578,6 +574,28 @@ public partial class Randomizer
             // logItem($"{(int)itemId.GetValue(row)}");
             // logItem($"{(int)category.GetValue(row)}");
         }
+
+        List<int> vanillaLocationsToRemoveIDs = new List<int>()
+        {
+            11000130, // Leyndell chest
+            11000470, // Leyndell path to grand lift
+            1036520070, // Perfumer's Ruins (on ledge)
+            1039510000, // Altus by omen
+        };
+        IReadOnlyList<Param.Row> perfumeBottleLocationsToRemove = _itemLotParam_map.Rows.Where(id => vanillaLocationsToRemoveIDs.Contains(id.ID)).ToList();
+        foreach (Param.Row row in perfumeBottleLocationsToRemove)
+        {
+            Param.Column itemId = row.Cells.ElementAt(0);
+            Param.Column category = row.Cells.ElementAt(8);
+            Param.Column chance = row.Cells.ElementAt(16);
+            itemId.SetValue(row, 0);
+            category.SetValue(row, 0);
+            chance.SetValue(row, (ushort)0);
+        }
+        int merchantPerfumeBottleToRemove = 100725;
+        Param.Row merchantPerfumeBottle = _shopLineupParam.Rows.Where(id => id.ID == merchantPerfumeBottleToRemove).ToArray()[0];
+        Param.Column equipId = merchantPerfumeBottle.Cells.ElementAt(0);
+        equipId.SetValue(merchantPerfumeBottle, 20760); // change it to a mushroom
     }
     private void replaceWeaponLineupParam(ShopLineupParam lot, List<int> WeaponShopList)
     {
