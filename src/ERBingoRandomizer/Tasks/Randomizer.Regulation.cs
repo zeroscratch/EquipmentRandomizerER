@@ -135,11 +135,13 @@ public partial class Randomizer
             Param.Column equipType = newSmithingStones.Cells.ElementAt(7);
             Param.Column sellQuanity = newSmithingStones.Cells.ElementAt(5);
             Param.Column sellPrice = newSmithingStones.Cells.ElementAt(1);
+            Param.Column eventFlagId = newSmithingStones.Cells.ElementAt(3);
 
             equipId.SetValue(newSmithingStones, 10100 + i);
             equipType.SetValue(newSmithingStones, (byte)3);
             sellQuanity.SetValue(newSmithingStones, (short)9);
             sellPrice.SetValue(newSmithingStones, sellPricesForSmithingStones[i]);
+            eventFlagId.SetValue(newSmithingStones, (uint)(120300 + i * 10));
 
             newSmithingStones.ID = 100230 + i;
 
