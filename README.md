@@ -43,6 +43,26 @@ Smithing stone cost is also patched to be 3x stones per level for stones [1, 2, 
 # Unlocked Maps
 All maps are unlocked at the start of the game.
 
+# Update to the Weapon Pool
+Shop weapons are now added to the weapon checks. This gives the players more weapons to work with when doing the checks.
+
+# Added a New Location for Pureblood Knights Medal
+The Pureblood now also drops in Leyndell right when you enter Sewer Mohg. This replaces the Rune Arc down there so the player now has two ways to get Mohg Dynasty.
+
+# Addition of SkipTheIntro Mod 
+The SkipTheIntro mod has been added for all players to keep the Bingo with an even playing field. Great for quick quit outs.
+
+# Remembrance Shop Items Changed
+The incants, sorcery, Ash of Wars and talismans have been removed from the pool when exchanging Remembrances. They have been replaced with other Remembrance weapons. Also the cost using runes have been removed when purchasing weapons.
+
+# Perfume Bottles Weapons have been Added
+Perfume bottles (consumables/item crafting) have been removed from the game and 5 locations have been replaced with Perfume bottles (Weapons). They are randomized amongst themselves. The current Locations are:
+* Volcano Manor
+* Caelid
+* Perfumer's Ruins
+* Perfumer's Grotto
+* Shaded Castle
+
 # Acknowledgements
 * Big thank you to Nordgaren for being the original developer for the randomizer and helping with bug-fixing class messages post-DLC.
 * All current changes to SoulsFormats in the project are SoulsFormatsNext.
