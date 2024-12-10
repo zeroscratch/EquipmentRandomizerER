@@ -17,8 +17,7 @@ This application has a simple UI to ensure that all players use the same randomi
 * Light Greatswords are pooled with Greatswords
 * Hand to Hand Arts are pooled with Fists
 * Beast Claws are pooled with Claws
-* Backhand Blades are pooled with Daggers
-* Axes and Greataxes are pooled for more weapon parity
+* Backhand Blades are pooled with Curved Swords
 * Thrusting and Heavy Thrusting are pooled for more weapon parity
 * Ranged weapons are in a pooled category (bows & light bows, greatbows & ballistas are all in the same pool). 
 
@@ -27,10 +26,6 @@ Starting classes are randomized: weapons, armor, stats, and spells. Class levels
 The Prisoner starts with its unrandomized staff and one sorcery. 
 The Confessor starts with its unrandomized seal and one incantation.
 
-# Powers of Remembrance
-Powers of Remembrance are randomized within the remembrance shop. 
-Rennala's Remembrance gifts a randomized weapon, to keep an incentive to check each remembrance for weapons.
-
 # Dragon Communion
 Dragon communion incantations are only randomized within dragon communion locations.
 
@@ -38,7 +33,7 @@ Dragon communion incantations are only randomized within dragon communion locati
 This mod also patches the AtkParamPC to fix a bug with SpEffectAtkPowerCorrectRate that caused swarm of flies damage to be incorrectly calculated in some circumstances. 
 
 # Smithing Stone Cost
-Smithing stone cost is also patched to be 3x stones per level for stones [1, 2, 3], 2x stones per level for stones [4, 5, 6], and 1x per level for each level after.
+Smithing stone cost is also patched to be 3x stones per level for stones.
 
 # Unlocked Maps
 All maps are unlocked at the start of the game.
