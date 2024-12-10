@@ -63,7 +63,9 @@ public partial class Randomizer
         patchSmithingStones();
         _cancellationToken.ThrowIfCancellationRequested();
         allocatedIDs = new HashSet<int>() { 2510000, };
-        addPureBloodToLeyndellReplacingRuneArc();
+        //addPureBloodToLeyndellReplacingRuneArc();
+        addPurebloodToElenora();
+        addSmithingStonesToIji();
         worldMap();
         writeFiles();
         writeLog();
@@ -83,18 +85,66 @@ public partial class Randomizer
         for (int i = 1; i < 10; i++)
         {
 
-        Param.Row newEleonaraRow = new(eleonara.First());
+            Param.Row newEleonaraRow = new(eleonara.First());
 
-        Param.Column[] itemIds = newEleonaraRow.Cells.Take(Const.ItemLots).ToArray();
-        Param.Column[] categories = newEleonaraRow.Cells.Skip(Const.CategoriesStart).Take(Const.ItemLots).ToArray();
+            Param.Column[] itemIds = newEleonaraRow.Cells.Take(Const.ItemLots).ToArray();
+            Param.Column[] categories = newEleonaraRow.Cells.Skip(Const.CategoriesStart).Take(Const.ItemLots).ToArray();
 
-        itemIds[0].SetValue(newEleonaraRow, 20760);
-        categories[0].SetValue(newEleonaraRow, 1);
+            itemIds[0].SetValue(newEleonaraRow, 20760);
+            categories[0].SetValue(newEleonaraRow, 1);
 
 
             newEleonaraRow.ID = 111600 + i;
 
             _itemLotParam_map.AddRow(newEleonaraRow);
+        }
+    }
+
+    private void addPurebloodToElenora()
+    {
+        IEnumerable<Param.Row> eleonara = _itemLotParam_map.Rows.Where(id => id.ID == 101620);
+        eleonara = eleonara.ToList();
+        Debug.WriteLine(eleonara.First().ID);
+
+
+        Param.Row newEleonaraRow = new(eleonara.First());
+
+        Param.Column[] itemIds = newEleonaraRow.Cells.Take(Const.ItemLots).ToArray();
+        Param.Column[] categories = newEleonaraRow.Cells.Skip(Const.CategoriesStart).Take(Const.ItemLots).ToArray();
+
+        itemIds[0].SetValue(newEleonaraRow, 2160);
+        categories[0].SetValue(newEleonaraRow, 1);
+
+        newEleonaraRow.ID = 101622;
+
+        _itemLotParam_map.AddRow(newEleonaraRow);
+    }
+
+    private void addSmithingStonesToIji()
+    {
+        IEnumerable<Param.Row> somberStoneID = _shopLineupParam.Rows.Where(id => id.ID == 100225);
+        somberStoneID = somberStoneID.ToList();
+
+        int[] sellPricesForSmithingStones = { 300, 600, 900 };
+
+        for(int i = 0; i < 3;i++)
+        {
+            Param.Row newSmithingStones = new(somberStoneID.First());
+
+            Param.Column equipId = newSmithingStones.Cells.ElementAt(0);
+            Param.Column equipType = newSmithingStones.Cells.ElementAt(7);
+            Param.Column sellQuanity = newSmithingStones.Cells.ElementAt(5);
+            Param.Column sellPrice = newSmithingStones.Cells.ElementAt(1);
+
+            equipId.SetValue(newSmithingStones, 10100 + i);
+            equipType.SetValue(newSmithingStones, (byte)3);
+            sellQuanity.SetValue(newSmithingStones, (short)9);
+            sellPrice.SetValue(newSmithingStones, sellPricesForSmithingStones[i]);
+
+            newSmithingStones.ID = 100230 + i;
+
+            _shopLineupParam.AddRow(newSmithingStones);
+
         }
     }
 
