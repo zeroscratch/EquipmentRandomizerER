@@ -240,8 +240,11 @@ public partial class Randomizer
     }
     private void writeFiles()
     {
-        if (Directory.Exists(Const.BingoPath))
-        { Directory.Delete(Const.BingoPath, true); }
+        if (Directory.Exists($"{Const.BingoPath}/{Const.RegulationName}"))
+        { Directory.Delete($"{Const.BingoPath}/{Const.RegulationName}", true); }
+
+        if (Directory.Exists($"{Const.BingoPath}/{Const.MenuMsgBNDPath}"))
+        { Directory.Delete($"{Const.BingoPath}/{Const.MenuMsgBNDPath}", true); }
 
         Directory.CreateDirectory(Path.GetDirectoryName($"{Const.BingoPath}/{Const.RegulationName}") ?? throw new InvalidOperationException());
         setBndFile(_regulationBnd, Const.CharaInitParamName, _charaInitParam.Write());
