@@ -13,7 +13,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ResourceFiles Include="$(SolutionDir)src\ERBingoRandomizer\Resources\**\*.*" />
+        <ResourceFiles Include="$(SolutionDir)src\ERBingoRandomizer\Resources\ME2\**\*.*" />
+		<ResourceFiles Include="$(SolutionDir)src\ERBingoRandomizer\Resources\Params\**\*.*" />
+		<ResourceFiles Include="$(SolutionDir)src\ERBingoRandomizer\Resources\Regulation\event\**\*.*" />
+		<ResourceFiles Include="$(SolutionDir)src\ERBingoRandomizer\Resources\Regulation\map\**\*.*" />
+		<ResourceFiles Include="$(SolutionDir)src\ERBingoRandomizer\Resources\Regulation\msg\engus\item_dlc02.msgbnd.dcx" />
     </ItemGroup>
     <PropertyGroup>
         <SolutionDir>$(MSBuildThisFileDirectory)..\</SolutionDir>
