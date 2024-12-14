@@ -63,10 +63,8 @@ public partial class Randomizer
         patchSmithingStones();
         _cancellationToken.ThrowIfCancellationRequested();
         allocatedIDs = new HashSet<int>() { 2510000, };
-        //addPureBloodToLeyndellReplacingRuneArc();
-        addPurebloodToElenora();
-        addSmithingStonesToIji();
         worldMap();
+        addArcaneTalismanToTwinMaidenHust();
         writeFiles();
         writeLog();
         SeedInfo = new SeedInfo(_seed, Util.GetShaRegulation256Hash());
@@ -191,6 +189,15 @@ public partial class Randomizer
 
         Param.Column[] canShowUndergroundMap = undergroundMapFlag.First().Cells.Skip(22).Take(1).ToArray();
         canShowUndergroundMap.First().SetValue(undergroundMapFlag.First(), (uint)6001);
+    }
+
+    private void addArcaneTalismanToTwinMaidenHust()
+    {
+        IEnumerable<Param.Row> hostTrickMirrorTalisman = _shopLineupParam.Rows.Where(id => id.ID == 101863);
+        hostTrickMirrorTalisman = hostTrickMirrorTalisman.ToList();
+
+        Param.Column equipId = hostTrickMirrorTalisman.First().Cells.ElementAt(0);
+        equipId.SetValue(hostTrickMirrorTalisman.First(), 8020);
     }
 
     private void randomizeStartingClassParams()
