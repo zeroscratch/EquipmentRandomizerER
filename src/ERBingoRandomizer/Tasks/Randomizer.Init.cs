@@ -41,7 +41,7 @@ public partial class Randomizer
     private Param _goodsParam;
     private Param _worldMapPieceParam;
     private Param _menuCommonParam;
-    //static async method that behaves like a constructor    
+    //static async method that behaves like a constructor
     public static async Task<Randomizer> BuildRandomizerAsync(string path, string seed, CancellationToken cancellationToken)
     {
         Randomizer rando = new(path, seed, cancellationToken);
@@ -52,7 +52,7 @@ public partial class Randomizer
     private Randomizer(string path, string seed, CancellationToken cancellationToken)
     {
         _path = Path.GetDirectoryName(path) ?? throw new InvalidOperationException("Path.GetDirectoryName(path) was null. Incorrect path provided.");
-        _regulationPath = $"{_path}/{Const.RegulationName}";
+        _regulationPath = $"{Config.ResourcesPath}/Regulation/{Const.RegulationName}";
         _seed = string.IsNullOrWhiteSpace(seed) ? createSeed() : seed.Trim();
         int sequence = hashStringToInteger(_seed);
         _random = new Random(sequence);
