@@ -27,6 +27,7 @@ public static class Const
     public const string ShopLineupParamName = "ShopLineupParam.param";
     public const string AtkParamPcName = "AtkParam_Pc.param";
     public const string WorldMapPieceParam = "WorldMapPieceParam.param";
+    public const string WorldMapPointParam = "WorldMapPointParam.param";
     public const string MenuCommonParam = "MenuCommonParam.param";
     // FMGS  
     public const string WeaponNameName = "WeaponName.fmg";
