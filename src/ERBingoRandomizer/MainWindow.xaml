@@ -115,8 +115,8 @@
                 </ListBox.ItemTemplate>
             </ListBox>
             <Image gif:ImageBehavior.RepeatBehavior="Forever"
-                   gif:ImageBehavior.AnimatedSource="Images/LittlePot.gif"
-                   Source="Images/LittlePot.gif"
+                   gif:ImageBehavior.AnimatedSource="Images/Rannigif3.gif"
+                   Source="/Images/Rannigif3.gif"
                    Width="120"
                    Height="120"
                    Visibility="{Binding IsGifVisible, Converter={StaticResource BoolToVisibilityConverter}}"
