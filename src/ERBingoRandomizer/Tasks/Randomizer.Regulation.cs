@@ -59,6 +59,7 @@ public partial class Randomizer
         randomizeShopArmorParam();
         _cancellationToken.ThrowIfCancellationRequested();
         randomizePerfumeBottleLocations();
+        removeMohgGreatRuneAndRemembrance();
         patchAtkParam();
         patchSmithingStones();
         _cancellationToken.ThrowIfCancellationRequested();
@@ -72,6 +73,21 @@ public partial class Randomizer
         string seedJson = JsonSerializer.Serialize(SeedInfo);
         File.WriteAllText(Config.LastSeedPath, seedJson);
         return Task.CompletedTask;
+    }
+
+    private void removeMohgGreatRuneAndRemembrance()
+    {
+        Param.Row mohgRemembrance = _itemLotParam_map.Rows.Where(id => id.ID == 10120).ToArray()[0];
+        Param.Column categoryForRemembrance = mohgRemembrance.Cells.ElementAt(Const.CategoriesStart);
+        categoryForRemembrance.SetValue(mohgRemembrance, 0);
+
+        Param.Row mohgGreatRune = _itemLotParam_map.Rows.Where(id => id.ID == 10121).ToArray()[0];
+        Param.Column categoryForGreatRune = mohgGreatRune.Cells.ElementAt(Const.CategoriesStart);
+        categoryForGreatRune.SetValue(mohgGreatRune, 0);
+
+        Param.Row lordsRuneInMohgwyn = _itemLotParam_map.Rows.Where(id => id.ID == 12050690).ToArray()[0];
+        Param.Column[] chance = lordsRuneInMohgwyn.Cells.Skip(Const.ChanceStart).Take(Const.ItemLots).ToArray();
+        chance[0].SetValue(lordsRuneInMohgwyn, (ushort)0);
     }
 
     private void duplicate()
@@ -764,7 +780,7 @@ public partial class Randomizer
             int numberRequired = (sbyte)row["itemNum01"]!.Value.Value;
             int category = (byte)row["materialCate01"]!.Value.Value;
             int id = (int)row["materialId01"]!.Value.Value;
-            sbyte three = 3;
+            sbyte one = 1;
 
             if (numberRequired > 1 && category == 4 && id >= 10100 && id < 10110)
             {
@@ -772,7 +788,7 @@ public partial class Randomizer
                 // if (adjustments > 9) { row["itemNum01"]!.Value.SetValue(Const.ReducedSmithingCost); }
                 // else
                 // {
-                row["itemNum01"]!.Value.SetValue(three);
+                row["itemNum01"]!.Value.SetValue(one);
                 // }
             }
         }

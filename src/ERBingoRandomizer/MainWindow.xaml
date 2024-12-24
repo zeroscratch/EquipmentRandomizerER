@@ -7,7 +7,7 @@
         xmlns:localConverter="clr-namespace:Randomizer.Converter"
         mc:Ignorable="d"
         xmlns:gif="http://wpfanimatedgif.codeplex.com"
-        Title="Zero Scratch Bingo Randomizer v1.0"
+        Title="Zero Scratch Bingo Randomizer v0.1 (BaseDLC)"
         Height="500"
         Width="800"
         ResizeMode="CanResizeWithGrip"
@@ -22,11 +22,18 @@
         <viewModels:MainWindowViewModel x:Name="MainWindowViewModel"/>
     </Window.DataContext>
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="29*"/>
+            <ColumnDefinition Width="18*"/>
+            <ColumnDefinition Width="94*"/>
+            <ColumnDefinition Width="61*"/>
+            <ColumnDefinition Width="598*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="350"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <StackPanel>
+        <StackPanel Grid.ColumnSpan="5">
             <Label Margin="0,25"
                    Content="Path to Elden Ring exe"
                    HorizontalAlignment="Center"
@@ -100,7 +107,7 @@
 
         </StackPanel>
 
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1" Grid.ColumnSpan="5">
             <ListBox Name="LogListBox"
                      ItemsSource="{Binding MessageDisplayView}"
                      Background="#C0C0C0"
