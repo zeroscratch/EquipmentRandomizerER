@@ -29,6 +29,7 @@ echo "Setting up bingo mod directory"
 mkdir -p $PUBLISH_DIR/Resources/ME2/bingo/msg/engus
 cp -r ./Resources/Regulation/map $PUBLISH_DIR/Resources/ME2/bingo
 cp -r ./Resources/Regulation/event $PUBLISH_DIR/Resources/ME2/bingo
+cp -r ./Resources/Regulation/script $PUBLISH_DIR/Resources/ME2/bingo
 cp ./Resources/Regulation/msg/engus/item_dlc02.msgbnd.dcx $PUBLISH_DIR/Resources/ME2/bingo/msg/engus
 
 echo "DONE"
