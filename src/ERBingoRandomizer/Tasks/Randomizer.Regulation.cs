@@ -18,6 +18,8 @@ using System.Drawing.Printing;
 using System.IO.MemoryMappedFiles;
 using System.Windows.Controls.Primitives;
 using Org.BouncyCastle.Asn1.Mozilla;
+using static Org.BouncyCastle.Asn1.Cmp.Challenge;
+using System.Windows.Forms;
 
 namespace Project.Tasks;
 
@@ -64,6 +66,7 @@ public partial class Randomizer
         patchSmithingStones();
         _cancellationToken.ThrowIfCancellationRequested();
         allocatedIDs = new HashSet<int>() { 2510000, };
+        addingWeaponsToTheWeaponsShop();
         worldMap();
         addArcaneTalismanToTwinMaidenHust();
         addMapIconsForWorldMap();
@@ -73,6 +76,145 @@ public partial class Randomizer
         string seedJson = JsonSerializer.Serialize(SeedInfo);
         File.WriteAllText(Config.LastSeedPath, seedJson);
         return Task.CompletedTask;
+    }
+
+    private void addingWeaponsToTheWeaponsShop()
+    {
+        IEnumerable<Param.Row> daggerID = _shopLineupParam.Rows.Where(id => id.ID == 101864);
+        daggerID = daggerID.ToList();
+
+        int priceForWeapon = 5000;
+
+        IList<Param.Row> itemLotWeapons = _itemLotParam_map.Rows.ToList();
+        IList<Param.Row> itemLotEnemyWeapons = _itemLotParam_enemy.Rows.ToList();
+        IList<Param.Row> shopItemWeapons = _shopLineupParam.Rows.ToList();
+
+        List<int> weaponIDs = new List<int>();
+        List<int> weaponsTypesToExclude = new List<int>() { 
+            Const.LightBowType, 
+            Const.BowType, 
+            Const.GreatbowType,
+            Const.StaffType, 
+            Const.ArrowType,
+            Const.BoltType,
+            Const.BallistaType,
+            Const.GreatArrowType, 
+            Const.CrossbowType, 
+            Const.BallistaBoltType, 
+            Const.SmallShieldType, 
+            Const.MediumShieldType, 
+            Const.GreatShieldType,
+            Const.SealType
+        };
+
+        foreach (Param.Row item in itemLotWeapons)
+        {
+            Param.Column equipType = item.Cells.ElementAt(8);
+
+            if ((int)equipType.GetValue(item) != 2)
+            {
+                continue;
+            }
+            Param.Column equipId = item.Cells.ElementAt(0); 
+            int equipIDValue = washWeaponLevels((int)equipId.GetValue(item));
+            Param.Row[] equipWeapon = _equipParamWeapon.Rows.Where(id => id.ID == equipIDValue).ToArray();
+
+            if (equipWeapon.Length == 0)
+            {
+                continue;
+            }
+
+            EquipParamWeapon equipParam = new(equipWeapon.First());
+
+            if (weaponsTypesToExclude.Contains(equipParam.wepType) || weaponIDs.Contains(equipIDValue))
+            {
+                continue;
+            }
+
+            weaponIDs.Add(equipIDValue);
+        }
+
+        foreach (Param.Row item in itemLotEnemyWeapons)
+        {
+            Param.Column equipType = item.Cells.ElementAt(8);
+
+            if ((int)equipType.GetValue(item) != 2)
+            {
+                continue;
+            }
+            Param.Column equipId = item.Cells.ElementAt(0);
+            int equipIDValue = washWeaponLevels((int)equipId.GetValue(item));
+            Param.Row[] equipWeapon = _equipParamWeapon.Rows.Where(id => id.ID == equipIDValue).ToArray();
+
+            if (equipWeapon.Length == 0)
+            {
+                continue;
+            }
+
+            EquipParamWeapon equipParam = new(equipWeapon.First());
+
+            if (weaponsTypesToExclude.Contains(equipParam.wepType) || weaponIDs.Contains(equipIDValue))
+            {
+                continue;
+            }
+
+            weaponIDs.Add(equipIDValue);
+        }
+
+        foreach (Param.Row item in shopItemWeapons)
+        {
+            Param.Column equipType = item.Cells.ElementAt(7);
+
+            if ((byte)equipType.GetValue(item) != 0)
+            {
+                continue;
+            }
+
+            Param.Column equipId = item.Cells.ElementAt(0);
+            int equipIDValue = washWeaponLevels((int)equipId.GetValue(item));
+            Param.Row[] equipWeapon = _equipParamWeapon.Rows.Where(id => id.ID == equipIDValue).ToArray();
+
+
+            if (equipWeapon.Length == 0)
+            {
+                continue;
+            }
+
+            EquipParamWeapon equipParam = new(equipWeapon.First());
+
+            if (weaponsTypesToExclude.Contains(equipParam.wepType) || weaponIDs.Contains(equipIDValue))
+            {
+                continue;
+            }
+
+            weaponIDs.Add(equipIDValue);
+        }
+
+        for (int i = 0; i < 7; i++)
+        {
+
+            // Get a random index
+            int randomIndex = _random.Next(weaponIDs.Count);
+
+            Param.Row newWeaponInShop = new(daggerID.First());
+
+            Param.Column equipId = newWeaponInShop.Cells.ElementAt(0);
+            Param.Column equipType = newWeaponInShop.Cells.ElementAt(7);
+            Param.Column sellQuanity = newWeaponInShop.Cells.ElementAt(5);
+            Param.Column sellPrice = newWeaponInShop.Cells.ElementAt(1);
+
+            equipId.SetValue(newWeaponInShop, weaponIDs[randomIndex]);
+            equipType.SetValue(newWeaponInShop, (byte)0);
+            sellQuanity.SetValue(newWeaponInShop, (short)1);
+            sellPrice.SetValue(newWeaponInShop, priceForWeapon);
+
+            newWeaponInShop.ID = 200000 + i;
+
+            weaponIDs.RemoveAt(randomIndex);
+
+            _shopLineupParam.AddRow(newWeaponInShop);
+        }
+
     }
 
     private void removeMohgGreatRuneAndRemembrance()

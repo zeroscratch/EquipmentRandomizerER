@@ -6,6 +6,7 @@ public class CharaInitParam
 {
     private Param.Cell _arrowNum;
     private Param.Cell _soulLv;
+    private Param.Cell _startingSouls;
     private Param.Cell _baseDex;
     private Param.Cell _baseEnd;
     private Param.Cell _baseFai;
@@ -59,6 +60,7 @@ public class CharaInitParam
         _equipSpell02 = chr["equip_Spell_02"]!.Value;
 
         _soulLv = chr["soulLv"]!.Value;
+        _startingSouls = chr["soul"]!.Value;
         _baseVit = chr["baseVit"]!.Value;
         _baseWil = chr["baseWil"]!.Value;
         _baseEnd = chr["baseEnd"]!.Value;
@@ -89,6 +91,7 @@ public class CharaInitParam
     public int equipSpell01 { get => (int)_equipSpell01.Value; set => _equipSpell01.Value = value; }
     public int equipSpell02 { get => (int)_equipSpell02.Value; set => _equipSpell02.Value = value; }
     public short soulLv { get => (short)_soulLv.Value; set => _soulLv.Value = value; }
+    public int startingSouls { get => (int)_startingSouls.Value; set => _startingSouls.Value = value; }
     public byte baseVit { get => (byte)_baseVit.Value; set => _baseVit.Value = value; }
     public byte baseWil { get => (byte)_baseWil.Value; set => _baseWil.Value = value; }
     public byte baseEnd { get => (byte)_baseEnd.Value; set => _baseEnd.Value = value; }

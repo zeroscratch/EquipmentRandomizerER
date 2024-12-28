@@ -28,6 +28,7 @@ public partial class Randomizer
     }
     private void allocateStatsAndSpells(int rowId, CharaInitParam startingClass)
     {
+        startingClass.startingSouls = 10000;
         switch (rowId)
         {
             case 3000:
