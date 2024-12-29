@@ -66,7 +66,7 @@ public partial class Randomizer
         patchSmithingStones();
         _cancellationToken.ThrowIfCancellationRequested();
         allocatedIDs = new HashSet<int>() { 2510000, };
-        addingWeaponsToTheWeaponsShop();
+        //addingWeaponsToTheWeaponsShop();
         worldMap();
         addArcaneTalismanToTwinMaidenHust();
         addMapIconsForWorldMap();
