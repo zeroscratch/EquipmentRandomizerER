@@ -41,9 +41,6 @@ All maps are unlocked at the start of the game.
 # Update to the Weapon Pool
 Shop weapons are now added to the weapon checks. This gives the players more weapons to work with when doing the checks.
 
-# Added a New Location for Pureblood Knights Medal
-The Pureblood now also drops in Leyndell right when you enter Sewer Mohg. This replaces the Rune Arc down there so the player now has two ways to get Mohg Dynasty.
-
 # Addition of SkipTheIntro Mod 
 The SkipTheIntro mod has been added for all players to keep the Bingo with an even playing field. Great for quick quit outs.
 
