@@ -276,7 +276,10 @@ public partial class Randomizer
         List<Param.Row> reapers = _weaponTypeDictionary[Const.ReaperType];
         List<Param.Row> greatKatanas = _weaponTypeDictionary[Const.GreatKatanaType];
 
-        List<int> sideArms = _weaponDictionary.Keys.Select(washWeaponMetadata).Distinct()
+        //Removes Godskin Peeler from starting classes
+        twinblades.RemoveAll(item => item.ID == 10010000);
+
+            List<int> sideArms = _weaponDictionary.Keys.Select(washWeaponMetadata).Distinct()
             .Where(id => staves.All(s => s.ID != id) && seals.All(s => s.ID != id)
                 && greatswords.All(s => s.ID != id)
                 && curvedGreatswords.All(s => s.ID != id)
@@ -302,6 +305,9 @@ public partial class Randomizer
             .ToList();
         addDlcWeapons(merchantWeaponList); // used later for merchants
 
+        // Remove Godskin Peeler from Merchants 
+        merchantWeaponList.Remove(10010000);
+
         for (int i = 0; i < Config.NumberOfClasses; i++)
         {
             Param.Row? row = _charaInitParam[Config.FirstClassId + i];
@@ -323,6 +329,11 @@ public partial class Randomizer
         IEnumerable<Param.Row> itemLotParamMap = _itemLotParam_map.Rows.Where(id => !Unk.unkItemLotParamMapWeapons.Contains(id.ID));
         IEnumerable<Param.Row> itemLotParamEnemy = _itemLotParam_enemy.Rows.Where(id => !Unk.unkItemLotParamEnemyWeapons.Contains(id.ID));
         IEnumerable<Param.Row> rowList = itemLotParamEnemy.Concat(itemLotParamMap);
+
+        foreach(var item in itemLotParamMap)
+        {
+            Debug.WriteLine(item.ID);
+        }
 
         foreach (Param.Row row in rowList)
         {
@@ -472,6 +483,7 @@ public partial class Randomizer
 
         foreach (Param.Row row in _shopLineupParam.Rows)
         {
+            logShopId(row.ID);
             if ((byte)row["equipType"]!.Value.Value != Const.ShopLineupWeaponCategory || row.ID > 101980) // TODO find out what this row.ID is, removes ~20 lots
             { continue; }
 
