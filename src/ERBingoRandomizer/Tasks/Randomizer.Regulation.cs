@@ -18,6 +18,8 @@ using System.Drawing.Printing;
 using System.IO.MemoryMappedFiles;
 using System.Windows.Controls.Primitives;
 using Org.BouncyCastle.Asn1.Mozilla;
+using System.Windows.Controls;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace Project.Tasks;
 
@@ -58,6 +60,7 @@ public partial class Randomizer
         _cancellationToken.ThrowIfCancellationRequested();
         randomizeShopArmorParam();
         _cancellationToken.ThrowIfCancellationRequested();
+        removeRunesFromEnemies();
         randomizePerfumeBottleLocations();
         patchAtkParam();
         patchSmithingStones();
@@ -72,6 +75,22 @@ public partial class Randomizer
         string seedJson = JsonSerializer.Serialize(SeedInfo);
         File.WriteAllText(Config.LastSeedPath, seedJson);
         return Task.CompletedTask;
+    }
+
+    private void removeRunesFromEnemies()
+    {
+        Param.Row golemOneInLimgrave = _npcParam.Rows.Where(id => id.ID == 46601010).ToArray()[0];
+        Param.Row golemTwoInLimgrave = _npcParam.Rows.Where(id => id.ID == 46600010).ToArray()[0];
+        Param.Row golemThreeInLimgrave = _npcParam.Rows.Where(id => id.ID == 46606010).ToArray()[0];
+
+        //46601010
+        Param.Column itemId = golemOneInLimgrave.Cells.ElementAt(13);
+        Param.Column itemIdForSecondGolem = golemTwoInLimgrave.Cells.ElementAt(13);
+        Param.Column itemIdForThreeGolem = golemThreeInLimgrave.Cells.ElementAt(13);
+
+        itemId.SetValue(golemOneInLimgrave, (uint)0);
+        itemIdForSecondGolem.SetValue(golemTwoInLimgrave, (uint)0);
+        itemIdForThreeGolem.SetValue(golemThreeInLimgrave, (uint)0);
     }
 
     private void duplicate()
@@ -263,6 +282,9 @@ public partial class Randomizer
                 && remembranceItems.All(i => i != id))
             .ToList();
 
+        // Removes Godskin Peeler from starting classes
+        mainArms.Remove(10010000);
+
         List<Param.Row> greatswords = _weaponTypeDictionary[Const.GreatswordType];
         List<Param.Row> curvedGreatswords = _weaponTypeDictionary[Const.CurvedGreatswordType];
         List<Param.Row> katanas = _weaponTypeDictionary[Const.KatanaType];
@@ -275,9 +297,6 @@ public partial class Randomizer
         List<Param.Row> halberds = _weaponTypeDictionary[Const.HalberdType];
         List<Param.Row> reapers = _weaponTypeDictionary[Const.ReaperType];
         List<Param.Row> greatKatanas = _weaponTypeDictionary[Const.GreatKatanaType];
-
-        //Removes Godskin Peeler from starting classes
-        twinblades.RemoveAll(item => item.ID == 10010000);
 
             List<int> sideArms = _weaponDictionary.Keys.Select(washWeaponMetadata).Distinct()
             .Where(id => staves.All(s => s.ID != id) && seals.All(s => s.ID != id)
@@ -296,7 +315,7 @@ public partial class Randomizer
                 && greatKatanas.All(s => s.ID != id)
                 && remembranceItems.All(i => i != id))
             .ToList();
-
+      
         merchantWeaponList = _weaponDictionary.Keys.Select(washWeaponMetadata).Distinct()
             .Where(id => staves.All(s => s.ID != id) && seals.All(s => s.ID != id)
                 && greatbows.All(s => s.ID != id)
@@ -330,10 +349,6 @@ public partial class Randomizer
         IEnumerable<Param.Row> itemLotParamEnemy = _itemLotParam_enemy.Rows.Where(id => !Unk.unkItemLotParamEnemyWeapons.Contains(id.ID));
         IEnumerable<Param.Row> rowList = itemLotParamEnemy.Concat(itemLotParamMap);
 
-        foreach(var item in itemLotParamMap)
-        {
-            Debug.WriteLine(item.ID);
-        }
 
         foreach (Param.Row row in rowList)
         {
@@ -483,7 +498,6 @@ public partial class Randomizer
 
         foreach (Param.Row row in _shopLineupParam.Rows)
         {
-            logShopId(row.ID);
             if ((byte)row["equipType"]!.Value.Value != Const.ShopLineupWeaponCategory || row.ID > 101980) // TODO find out what this row.ID is, removes ~20 lots
             { continue; }
 
