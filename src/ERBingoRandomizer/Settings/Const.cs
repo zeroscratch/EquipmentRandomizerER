@@ -29,6 +29,7 @@ public static class Const
     public const string WorldMapPieceParam = "WorldMapPieceParam.param";
     public const string WorldMapPointParam = "WorldMapPointParam.param";
     public const string MenuCommonParam = "MenuCommonParam.param";
+    public const string NpcParam = "NpcParam.param";
     // FMGS  
     public const string WeaponNameName = "WeaponName.fmg";
     public const string ProtectorNameName = "ProtectorName.fmg";

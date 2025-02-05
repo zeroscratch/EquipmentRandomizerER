@@ -42,6 +42,7 @@ public partial class Randomizer
     private Param _worldMapPieceParam;
     private Param _menuCommonParam;
     private Param _worldMapPointParam;
+    private Param _npcParam;
     //static async method that behaves like a constructor
     public static async Task<Randomizer> BuildRandomizerAsync(string path, string seed, CancellationToken cancellationToken)
     {
@@ -363,6 +364,15 @@ public partial class Randomizer
                     if (!_worldMapPointParam.ApplyParamDefsCarefully(_paramDefs))
                     {
                         throw new InvalidParamDefException(_worldMapPointParam.ParamType);
+                    }
+                    break;
+                }
+            case Const.NpcParam:
+                {
+                    _npcParam = Param.Read(file.Bytes);
+                    if (!_npcParam.ApplyParamDefsCarefully(_paramDefs))
+                    {
+                        throw new InvalidParamDefException(_npcParam.ParamType);
                     }
                     break;
                 }

@@ -257,6 +257,7 @@ public partial class Randomizer
         setBndFile(_regulationBnd, Const.WorldMapPieceParam, _worldMapPieceParam.Write());
         setBndFile(_regulationBnd, Const.MenuCommonParam, _menuCommonParam.Write());
         setBndFile(_regulationBnd, Const.WorldMapPointParam, _worldMapPointParam.Write());
+        setBndFile(_regulationBnd, Const.NpcParam, _npcParam.Write());
         SFUtil.EncryptERRegulation($"{Const.BingoPath}/{Const.RegulationName}", _regulationBnd);
         // create menu message for starting classes
         Directory.CreateDirectory(Path.GetDirectoryName($"{Const.BingoPath}/{Const.MenuMsgBNDPath}") ?? throw new InvalidOperationException());
@@ -453,7 +454,7 @@ public partial class Randomizer
         _weaponFmg[14510000] = "Death Knight's Twin Axes";
         _weaponFmg[14540000] = "Forked-Tongue Hatchet";
         _weaponFmg[64520000] = "Curseblade's Cirque";
-        //_weaponFmg[64510000] = "Smithscript Cirque";
+        _weaponFmg[64510000] = "Smithscript Cirque";
         _weaponFmg[64500000] = "Backhand Blade";
         _weaponFmg[8520000] = "Horned Warrior's Greatsword";
         _weaponFmg[22500000] = "Claws of Night";
@@ -519,10 +520,11 @@ public partial class Randomizer
         {
             for (int u = 0; u < 25; u += 1)
             {
-                // _weaponFmg[i + u + 14500000] = "Smithscript Axe";
-                // _weaponFmg[i + u + 16500000] = "Smithscript Spear";
+                 _weaponFmg[i + u + 14500000] = "Smithscript Axe";
+                 _weaponFmg[i + u + 16500000] = "Smithscript Spear";
                  _weaponFmg[i + u + 64510000] = "Smithscript Cirque";
-                // _weaponFmg[i + u + 12500000] = "Smithscript Greathammer";
+                 _weaponFmg[i + u + 12500000] = "Smithscript Greathammer";
+                _weaponFmg[i + u + 30510000] = "Smithscript Shield";
                 _weaponFmg[i + u + 60500000] = "Dryleaf Arts";
                 _weaponFmg[i + u + 60510000] = "Dane's Footwork";
                 _weaponFmg[i + u + 14520000] = "Messmer Soldier's Axe";
