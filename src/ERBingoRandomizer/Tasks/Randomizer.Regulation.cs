@@ -258,6 +258,7 @@ public partial class Randomizer
         List<Param.Row> fists = _weaponTypeDictionary[Const.FistType];
         List<Param.Row> colossalWeapons = _weaponTypeDictionary[Const.ColossalWeaponType];
         List<Param.Row> colossalSwords = _weaponTypeDictionary[Const.ColossalSwordType];
+        List<Param.Row> twinblades = _weaponTypeDictionary[Const.TwinbladeType];
 
         IEnumerable<int> remembranceItems = _shopLineupParam.Rows.Where(r => r.ID is >= 101895 and <= 101948) // sword lance to Light of Miquella
             .Select(r => new ShopLineupParam(r).equipId);
@@ -279,16 +280,14 @@ public partial class Randomizer
                 && claws.All(s => s.ID != id)
                 && daggers.All(s => s.ID != id)
                 && fists.All(s => s.ID != id)
+                && washWeaponMetadata(id) != 10010000
                 && remembranceItems.All(i => i != id))
             .ToList();
-
-        // Removes Godskin Peeler from starting classes
-        mainArms.Remove(10010000);
 
         List<Param.Row> greatswords = _weaponTypeDictionary[Const.GreatswordType];
         List<Param.Row> curvedGreatswords = _weaponTypeDictionary[Const.CurvedGreatswordType];
         List<Param.Row> katanas = _weaponTypeDictionary[Const.KatanaType];
-        List<Param.Row> twinblades = _weaponTypeDictionary[Const.TwinbladeType];
+        
         List<Param.Row> heavyThrusting = _weaponTypeDictionary[Const.HeavyThrustingType];
         List<Param.Row> axes = _weaponTypeDictionary[Const.AxeType];
         List<Param.Row> greataxes = _weaponTypeDictionary[Const.GreataxeType];
@@ -320,12 +319,10 @@ public partial class Randomizer
             .Where(id => staves.All(s => s.ID != id) && seals.All(s => s.ID != id)
                 && greatbows.All(s => s.ID != id)
                 && greatShields.All(s => s.ID != id)
+                && id != 10010000
                 && remembranceItems.All(i => i != id))
             .ToList();
         addDlcWeapons(merchantWeaponList); // used later for merchants
-
-        // Remove Godskin Peeler from Merchants 
-        merchantWeaponList.Remove(10010000);
 
         for (int i = 0; i < Config.NumberOfClasses; i++)
         {
@@ -348,6 +345,17 @@ public partial class Randomizer
         IEnumerable<Param.Row> itemLotParamMap = _itemLotParam_map.Rows.Where(id => !Unk.unkItemLotParamMapWeapons.Contains(id.ID));
         IEnumerable<Param.Row> itemLotParamEnemy = _itemLotParam_enemy.Rows.Where(id => !Unk.unkItemLotParamEnemyWeapons.Contains(id.ID));
         IEnumerable<Param.Row> rowList = itemLotParamEnemy.Concat(itemLotParamMap);
+
+        //foreach (var item in rowList)
+        //{
+        //    Param.Column[] itemIds = item.Cells.Take(Const.ItemLots).ToArray();
+        //    int id = (int)itemIds[0].GetValue(item);
+        //    if (id == 14500000)
+        //    {
+        //        Debug.WriteLine("This ID exists");
+        //    }
+            
+        //}
 
 
         foreach (Param.Row row in rowList)
