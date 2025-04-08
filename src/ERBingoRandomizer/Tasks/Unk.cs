@@ -27,6 +27,7 @@ static class Unk {
         42030120, //Smithscript Shield
         42030160, //Smithscript Greathammer
         42000150, //Smithscript Dagger
+        30325, //Godskin Peeler
     };
     internal static int[] unkItemLotParamEnemyWeapons = {
         0,
@@ -216,5 +217,6 @@ static class Unk {
         466000630,
         466000631,
         466000632,
+        10010000, //Godskin Peeler
     };
 }

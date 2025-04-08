@@ -20,6 +20,7 @@ using System.Windows.Controls.Primitives;
 using Org.BouncyCastle.Asn1.Mozilla;
 using System.Windows.Controls;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+using System.Globalization;
 
 namespace Project.Tasks;
 
@@ -350,12 +351,28 @@ public partial class Randomizer
         //{
         //    Param.Column[] itemIds = item.Cells.Take(Const.ItemLots).ToArray();
         //    int id = (int)itemIds[0].GetValue(item);
-        //    if (id == 14500000)
+        //    if (id == 10010000)
         //    {
         //        Debug.WriteLine("This ID exists");
         //    }
-            
         //}
+
+        List<int> perfumeBottleIDs = new List<int>()
+        {
+            10500000, // Euporia
+            10500000, // Gargoyles Twinblade
+            10030000, // Twinned Blade
+            10000000, // Twinblade
+            10510000, // Blacksteel
+            10050000, // Elenora's Poleblade
+        };
+        perfumeBottleIDs.Shuffle(_random);
+
+        IEnumerable<Param.Row> godskinPeeler = _itemLotParam_map.Rows.Where(id => id.ID == 30325);
+        godskinPeeler = godskinPeeler.ToList();
+
+        Param.Column equipIdToChange = godskinPeeler.First().Cells.ElementAt(0);
+        equipIdToChange.SetValue(godskinPeeler.First(), perfumeBottleIDs[0]);
 
 
         foreach (Param.Row row in rowList)
@@ -655,7 +672,7 @@ public partial class Randomizer
            31180000, // Perfumer's Grotto
            1036510020, // Perfumer's Ruins (near Omenkiller)
            1039540040, // Shaded Castle
-           1048380010 // Caelid
+           // 1048380010 // Caelid
         };
         List<int> perfumeBottleIDs = new List<int>()
         {
@@ -682,6 +699,18 @@ public partial class Randomizer
             // logItem($"{(int)itemId.GetValue(row)}");
             // logItem($"{(int)category.GetValue(row)}");
         }
+
+        // Twin Maiden Husk Code
+        IEnumerable<Param.Row> leyndellNote = _shopLineupParam.Rows.Where(id => id.ID == 100743);
+        leyndellNote = leyndellNote.ToList();
+
+        Param.Column equipIdToChange = leyndellNote.First().Cells.ElementAt(0);
+        Param.Column categoryToChange = leyndellNote.First().Cells.ElementAt(7);
+        Param.Column textIDToChange = leyndellNote.First().Cells.ElementAt(14);
+        equipIdToChange.SetValue(leyndellNote.First(), perfumeBottleIDs[0]);
+        categoryToChange.SetValue(leyndellNote.First(), (byte)0);
+        textIDToChange.SetValue(leyndellNote.First(), -1);
+
 
         List<int> vanillaLocationsToRemoveIDs = new List<int>()
         {
